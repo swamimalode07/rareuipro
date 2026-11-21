@@ -7,6 +7,7 @@ export const DIST_RANGE = 0.25;
 
 const BEVEL = 0.2;
 const SMOOTH_PX = 8;
+const EDGE_SMOOTH_PX = 2;
 const PIVOT_X = 131;
 const PIVOT_Y = 136;
 const FILL = 0.42;
@@ -125,8 +126,10 @@ export function buildFlowerRelief() {
   const h = new Float64Array(n * n);
   for (let i = 0; i < n * n; i++) {
     signed[i] = (toInside[i] - toOutside[i]) * unit;
-    h[i] = height(signed[i]);
   }
+  // the backdrop magnifies this field many times, so soften the pixel staircase of the mask
+  blur(signed, n, EDGE_SMOOTH_PX);
+  for (let i = 0; i < n * n; i++) h[i] = height(signed[i]);
 
   blur(h, n, SMOOTH_PX);
 
