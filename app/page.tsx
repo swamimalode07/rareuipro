@@ -3,6 +3,7 @@ import GooeyNavbar from "@/components/GooeyNavbar";
 import ProHero from "@/components/hero/ProHero";
 import ComponentsShowcase from "@/components/ComponentsShowcase";
 import TestimonialsSection from "@/components/testimonials/TestimonialsSection";
+import PricingSection from "@/components/pricing/PricingSection";
 import Footer from "@/components/Footer";
 import SpiderWebs from "@/components/SpiderWebs";
 import DiwaliLights from "@/components/DiwaliLights";
@@ -28,6 +29,7 @@ export default function Home() {
       </section>
       <ComponentsShowcase />
       <TestimonialsSection />
+      <PricingSection />
       <Footer />
     </>
   );

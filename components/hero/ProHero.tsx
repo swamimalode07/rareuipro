@@ -53,7 +53,7 @@ export default function ProHero() {
           <motion.div {...rise(2)} className="mt-9 flex flex-wrap items-center justify-center gap-2">
             <HeroCta />
             <Link
-              href="/account"
+              href="#pricing"
               className="group flex h-11 items-center gap-1.5 rounded-[14px] px-4 font-runde text-[15px] font-semibold text-black/60 transition-colors duration-150 ease-out hover:bg-black/[0.05] hover:text-black dark:text-white/70 dark:hover:bg-white/[0.07] dark:hover:text-white"
             >
               View pricing

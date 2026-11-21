@@ -15,3 +15,6 @@ export const HALLOWEEN_LOGO_ENABLED = true;
 export const HALLOWEEN_WEBS_ENABLED = true;
 export const DIWALI_LOGO_ENABLED = true;
 export const DIWALI_LIGHTS_ENABLED = true;
+
+// shown on the landing page; checkout on Polar is the source of truth
+export const PRO_PRICE_USD = 199;

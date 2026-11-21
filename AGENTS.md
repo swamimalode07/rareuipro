@@ -10,6 +10,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 Read `CONVENTIONS.md` before writing or editing any component, documentation, description, or comment. Follow it exactly.
 
+Read `DESIGN.md` before designing or restyling any page, section or component.
+
 # Replies
 
 Answer only what was asked. Short and direct, no filler, no long paragraphs, no extra suggestions unless needed.
