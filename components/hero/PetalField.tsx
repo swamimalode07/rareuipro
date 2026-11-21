@@ -11,7 +11,7 @@ const TOUCH_DPR = 1.5;
 // keeps 4k and 5k displays smooth; below this budget the canvas renders at full device resolution
 const MAX_PIXELS = 6_000_000;
 const GIANT = 1.4;
-const BEVEL = 0.11;
+const BEVEL = 0.14;
 const POINTER_EASE = 0.06;
 
 const VERT = `
@@ -36,8 +36,7 @@ uniform vec4 u_heightInfo;
 uniform sampler2D u_mask;
 uniform sampler2D u_height;
 
-const float PLEATS = 40.0;
-const vec3 CHAMPAGNE = vec3(0.95, 0.87, 0.78);
+const vec3 ORANGE = vec3(0.988, 0.298, 0.004);
 
 float hash2(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -56,6 +55,10 @@ float noise(vec2 p) {
   );
 }
 
+float fbm(vec2 p) {
+  return noise(p) * 0.55 + noise(p * 2.03 + 1.7) * 0.3 + noise(p * 4.01 - 3.1) * 0.15;
+}
+
 float cover(vec2 frag) {
   return texture2D(u_mask, frag / u_resolution).a;
 }
@@ -72,7 +75,7 @@ void main() {
   float t = u_time;
 
   float e = length((frag - u_veil.xy) / max(u_veil.zw, vec2(1.0)));
-  float veil = smoothstep(0.45, 1.55, e);
+  float veil = smoothstep(0.3, 1.15, e);
 
   float shadowH = dome(frag + vec2(0.0, 0.035 * u_radius));
   float occlude = smoothstep(0.0, 0.7, shadowH);
@@ -95,8 +98,6 @@ void main() {
 
   vec2 bq = (frag - 0.5 * u_resolution) / u_radius;
   float br = length(bq);
-  vec2 radial = normalize(bq + 1e-5);
-  vec2 around = vec2(-radial.y, radial.x);
 
   // the height map is 8-bit, so its slope is read across a wide span or the steps show as contour lines
   float step_ = u_bevel * 0.18;
@@ -104,33 +105,32 @@ void main() {
     dome(frag + vec2(step_, 0.0)) - dome(frag - vec2(step_, 0.0)),
     dome(frag + vec2(0.0, step_)) - dome(frag - vec2(0.0, step_))
   ) / (2.0 * step_);
-  vec2 slope = -grad * u_bevel * 1.4;
+  vec2 slope = -grad * u_bevel * 1.5;
+  vec3 n = normalize(vec3(slope, 1.0));
 
-  // knife pleats fan out from the heart: flat facets with sharp creases, so highlights land as crisp lines
-  float warp = noise(radial * 1.6 + vec2(br * 1.4 - t * 0.04, t * 0.02)) * 2.4;
-  float phase = (atan(bq.y, bq.x) * PLEATS + warp + br * 3.0) / 6.2831853;
-  float periodPx = 6.2831853 * br * u_radius / PLEATS;
-  float crease = clamp(periodPx / (1.5 * u_px), 2.0, 400.0);
-  float tilt = clamp((fract(phase) - 0.5) * crease, -1.0, 1.0);
-  vec3 n = normalize(vec3(slope + around * tilt * 0.34, 1.0));
+  // each petal holds slow, quiet mist: soft greys and off-white, with the brand orange only as a faint wisp
+  float flow = t * 0.03;
+  vec2 pp = bq * 1.15;
+  vec2 q = vec2(fbm(pp + vec2(0.0, flow)), fbm(pp + vec2(5.2, 1.3) - flow * 0.8));
+  vec2 r = vec2(fbm(pp + 2.6 * q + vec2(1.7, 9.2) + flow * 0.6), fbm(pp + 2.6 * q + vec2(8.3, 2.8) - flow * 0.5));
+  // fbm piles up around 0.5, so stretch it or the outer tones never show
+  float f = smoothstep(0.3, 0.72, fbm(pp + 2.6 * r));
+  float wisp = smoothstep(0.44, 0.64, r.y) * smoothstep(0.25, 0.6, f);
 
-  // fibres finer than a few pixels would shimmer, so each octave fades out before it gets there
-  float ring = 6.2831853 * br * u_radius / u_px;
-  float coarse = smoothstep(2.0, 5.0, ring / 160.0);
-  float fine = smoothstep(2.0, 5.0, ring / 380.0);
-  float fibre = mix(0.5, noise(radial * 160.0 + vec2(0.0, br * 6.0 - t * 0.05)), coarse) * 0.55
-    + mix(0.5, noise(radial * 380.0 + vec2(br * 12.0, 0.0)), fine) * 0.45;
-  fibre = smoothstep(0.25, 0.85, fibre);
-  float th = dot(vec3(radial, 0.0), half_);
-  float sheen = pow(sqrt(max(1.0 - th * th, 0.0)), 40.0);
+  vec3 nightPaint = mix(vec3(0.15, 0.15, 0.155), vec3(0.42, 0.42, 0.43), smoothstep(0.15, 0.7, f));
+  nightPaint = mix(nightPaint, vec3(0.8, 0.78, 0.76), smoothstep(0.7, 1.0, f) * 0.75);
+  nightPaint = mix(nightPaint, ORANGE * 0.9, wisp * 0.6);
+
+  vec3 dayPaint = mix(vec3(0.9, 0.9, 0.91), vec3(0.985, 0.982, 0.978), smoothstep(0.25, 0.8, f));
+  dayPaint = mix(dayPaint, vec3(0.8, 0.8, 0.81), smoothstep(0.2, 0.0, f) * 0.5);
+  dayPaint = mix(dayPaint, vec3(1.0, 0.55, 0.3), wisp * 0.5);
+
+  // a soft cushion sheen so the petals still read as objects, not cut-outs
   float nh = max(dot(n, half_), 0.0);
-  float spec = pow(nh, 90.0) * 0.9 + pow(nh, 10.0) * 0.18;
   float lit = max(dot(n, light), 0.0);
-  float heart = smoothstep(0.5, 0.12, br);
-
-  vec3 satin = vec3(0.12, 0.11, 0.105) * (0.2 + 0.95 * lit);
-  satin += CHAMPAGNE * (spec * 0.55 + sheen * 0.1) * (0.45 + 0.55 * fibre);
-  satin = mix(satin, satin * vec3(1.7, 0.8, 0.45), heart * 0.75);
+  float gloss = pow(nh, 32.0) * 0.18 + pow(nh, 6.0) * 0.05;
+  vec3 satin = nightPaint * (0.7 + 0.4 * lit) + vec3(1.0, 0.97, 0.93) * gloss;
+  vec3 pearl = dayPaint * (0.9 + 0.1 * lit) + vec3(1.0) * gloss * 0.5;
 
   // a crisp lit lip, a few css pixels wide, traced from the exact mask
   float lipW = 2.5 * u_px;
@@ -140,13 +140,10 @@ void main() {
   );
   float lip = 1.0 - inner;
   float facing = max(dot(normalize(slope + 1e-5), normalize(light.xy)), 0.0);
-  satin += CHAMPAGNE * lip * (0.1 + 0.55 * facing);
+  satin += vec3(1.0, 0.95, 0.9) * lip * (0.04 + 0.3 * facing);
+  pearl -= lip * 0.06 * (1.0 - facing);
 
-  vec3 pearl = vec3(0.985, 0.982, 0.978) * (0.8 + 0.2 * lit) + CHAMPAGNE * spec * 0.12 - fibre * 0.015;
-  pearl = mix(pearl, pearl * vec3(1.0, 0.88, 0.8), heart * 0.5);
-  pearl -= lip * 0.08 * (1.0 - facing);
-
-  vec3 darkCol = mix(darkGap, satin, c) * mix(0.22, 1.0, veil);
+  vec3 darkCol = mix(darkGap, satin, c) * mix(0.3, 1.0, veil);
   vec3 lightCol = mix(vec3(0.961, 0.961, 0.969), mix(lightGap, pearl, c), mix(0.35, 1.0, veil));
   gl_FragColor = vec4(mix(lightCol, darkCol, u_dark) + grain, 1.0);
 }
