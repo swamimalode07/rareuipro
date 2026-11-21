@@ -93,7 +93,7 @@ export default function GooeyNavbar() {
           >
             <NavLogo hovered={logoHovered} />
             <span className="font-runde text-md font-semibold text-neutral-900 dark:text-white">
-              Rare UI
+              Rare UI <span className="text-[#FC4C01]">Pro</span>
             </span>
           </Link>
         </motion.div>

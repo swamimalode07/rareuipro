@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 export type LogoProps = { className?: string };
 
 export function NpmLogo({ className }: LogoProps) {
@@ -89,6 +91,48 @@ export function RareuiLogo({ className }: LogoProps) {
     <svg viewBox="0 0 263 252" fill="currentColor" className={className} aria-hidden>
       {RAREUI_PETALS.map((d) => (
         <path key={d} d={d} />
+      ))}
+    </svg>
+  );
+}
+
+// the pro mark: one orange petal among four polished-silver ones; every petal shares the same light so they read as one material
+export function RareuiProLogo({ className }: LogoProps) {
+  const id = useId().replace(/:/g, "");
+  const silver = `silver-${id}`;
+  const ember = `ember-${id}`;
+  const shine = `shine-${id}`;
+  const rim = `rim-${id}`;
+  return (
+    <svg viewBox="-2 -2 267 256" className={className} aria-hidden>
+      <defs>
+        <linearGradient id={silver} x1="0.15" y1="0" x2="0.8" y2="1">
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="0.32" stopColor="#E4E6EA" />
+          <stop offset="0.56" stopColor="#ADB1B8" />
+          <stop offset="0.64" stopColor="#8E939B" />
+          <stop offset="1" stopColor="#D2D5DA" />
+        </linearGradient>
+        <linearGradient id={ember} x1="0.15" y1="0" x2="0.8" y2="1">
+          <stop offset="0" stopColor="#FF8A4C" />
+          <stop offset="0.45" stopColor="#FC4C01" />
+          <stop offset="1" stopColor="#D43C00" />
+        </linearGradient>
+        <linearGradient id={shine} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.5" />
+          <stop offset="0.4" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id={rim} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.85" />
+          <stop offset="0.35" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {RAREUI_PETALS.map((d, i) => (
+        <g key={d}>
+          <path d={d} fill={`url(#${i === 0 ? ember : silver})`} />
+          <path d={d} fill={`url(#${shine})`} opacity={i === 0 ? 0.45 : 1} />
+          <path d={d} fill="none" stroke={`url(#${rim})`} strokeWidth="2.5" opacity={i === 0 ? 0.5 : 1} />
+        </g>
       ))}
     </svg>
   );

@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [{ url: "/logos/Rareui.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/logos/RareuiPro.svg", type: "image/svg+xml" }],
   },
   openGraph: {
     title: SITE_TAGLINE,

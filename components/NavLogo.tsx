@@ -4,6 +4,7 @@ import DiwaliLogo from "@/components/DiwaliLogo";
 import HalloweenLogo from "@/components/HalloweenLogo";
 import { useDiwali } from "@/lib/diwali";
 import { useHalloween } from "@/lib/halloween";
+import { RareuiProLogo } from "@/components/logos";
 import { DIWALI_LOGO_ENABLED, HALLOWEEN_LOGO_ENABLED } from "@/lib/site";
 
 export default function NavLogo({ hovered }: { hovered: boolean }) {
@@ -12,5 +13,5 @@ export default function NavLogo({ hovered }: { hovered: boolean }) {
 
   if (diwali) return <DiwaliLogo hovered={hovered} />;
   if (halloween) return <HalloweenLogo hovered={hovered} />;
-  return <img src="/logos/Rareui.svg" alt="" className="h-5 w-5" />;
+  return <RareuiProLogo className="h-5 w-5" />;
 }

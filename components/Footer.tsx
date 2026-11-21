@@ -3,7 +3,7 @@ import { SUPPORT_EMAIL } from "@/lib/legal";
 import { SITE_URL } from "@/lib/site";
 import HeroCta from "./HeroCta";
 import PetalField from "./hero/PetalField";
-import { XLogo } from "./logos";
+import { RareuiProLogo, XLogo } from "./logos";
 
 const X_URL = "https://x.com/swamimalode";
 const DMCA_ID = "ee2a2636-6919-4dcc-a846-c70b066419b8";
@@ -67,9 +67,9 @@ export default function Footer() {
         <div className="flex flex-col gap-12 py-12 md:flex-row md:justify-between">
           <div className="flex max-w-xs flex-col gap-4">
             <Link href="/" className="flex w-fit items-center gap-2.5">
-              <img src="/logos/Rareui.svg" alt="" className="size-7" />
+              <RareuiProLogo className="size-7" />
               <span className="font-runde text-xl font-bold tracking-tight">
-                Rare UI Pro
+                Rare UI <span className="text-[#FC4C01]">Pro</span>
               </span>
             </Link>
             <p className={`text-sm font-medium leading-relaxed ${MUTED}`}>
@@ -112,7 +112,7 @@ export default function Footer() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-linear-to-b from-white to-transparent dark:from-black" />
 
         <div className="relative flex h-full flex-col items-center justify-center gap-5 px-6 pb-20 text-center">
-          <img src="/logos/Rareui.svg" alt="" className="size-10" />
+          <RareuiProLogo className="size-10" />
           <p className="max-w-sm text-balance font-runde text-lg font-semibold text-black/70 dark:text-white/70">
             Every component, block and template. One license.
           </p>
