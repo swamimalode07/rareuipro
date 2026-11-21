@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import TestimonialCard from "./TestimonialCard";
 
 const VIEWPORT =
-  "relative h-[560px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_10%,#000_90%,transparent)] motion-reduce:h-auto motion-reduce:[mask-image:none] lg:h-[700px]";
+  "relative h-[560px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_6%,#000_88%,transparent)] motion-reduce:h-auto motion-reduce:[mask-image:none] lg:h-[700px]";
 
 const TRACK =
   "will-change-transform group-hover:[animation-play-state:paused] motion-reduce:[animation:none]";
