@@ -3,11 +3,11 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useTheme } from "next-themes";
 import { bindFullscreenQuad, createProgram } from "@/lib/webgl";
-import { buildFlowerRelief, DIST_RANGE, RELIEF_SIZE } from "@/lib/flowerRelief";
+import { buildFlowerRelief, DIST_RANGE, EDGE_RANGE, RELIEF_SIZE } from "@/lib/flowerRelief";
 import { cn } from "@/lib/utils";
 
 const MAX_DPR = 2;
-const RESOLUTION_SCALE = 0.7;
+const RESOLUTION_SCALE = 0.9;
 const POINTER_EASE = 0.05;
 
 const VERT = `
@@ -28,15 +28,11 @@ uniform vec2 u_resolution;
 uniform float u_time;
 uniform float u_dark;
 uniform vec2 u_pointer;
-uniform vec2 u_center;
-uniform float u_size;
 uniform vec4 u_veil;
 uniform sampler2D u_relief;
 
-const vec3 ORANGE = vec3(0.988, 0.298, 0.004);
-const float GIANT = 1.05;
-// the backdrop flower sits a fifth of a turn off the logo so its petals frame the gaps
-const float GIANT_TURN = 0.6283;
+const float GIANT = 1.4;
+const float GIANT_TURN = 0.0;
 const float PLEATS = 22.0;
 
 float hash2(vec2 p) {
@@ -65,7 +61,10 @@ vec2 rotate(vec2 p, float a) {
 vec4 relief(vec2 q) {
   vec4 t = texture2D(u_relief, q * 0.5 + 0.5);
   float outside = step(1.0, max(abs(q.x), abs(q.y)));
-  return vec4(t.rg * 2.0 - 1.0, 0.0, mix((t.b - 0.5) * ${(DIST_RANGE * 2).toFixed(3)}, 1.0, outside));
+  float coarse = (t.b - 0.5) * ${(DIST_RANGE * 2).toFixed(3)};
+  float fine = (t.a - 0.5) * ${(EDGE_RANGE * 2).toFixed(3)};
+  float d = abs(coarse) < ${(EDGE_RANGE * 0.9).toFixed(3)} ? fine : coarse;
+  return vec4(t.rg * 2.0 - 1.0, 0.0, mix(d, 1.0, outside));
 }
 
 void main() {
@@ -78,7 +77,7 @@ void main() {
   vec3 half_ = normalize(light + vec3(0.0, 0.0, 1.0));
 
   float g = m * GIANT;
-  vec2 bq = rotate((frag - u_center) / g, -GIANT_TURN);
+  vec2 bq = rotate((frag - u_resolution * 0.5) / g, -GIANT_TURN);
   vec4 big = relief(bq);
   float bigCover = smoothstep(2.0 / g, -2.0 / g, big.w);
   float br = length(bq);
@@ -97,7 +96,8 @@ void main() {
   fibre = smoothstep(0.2, 0.9, fibre);
   float th = dot(vec3(fibreDir, 0.0), half_);
   float sheen = pow(sqrt(max(1.0 - th * th, 0.0)), 40.0);
-  float spec = pow(max(dot(n, half_), 0.0), 14.0);
+  float nh = max(dot(n, half_), 0.0);
+  float spec = pow(nh, 40.0) * 0.8 + pow(nh, 8.0) * 0.25;
   float lit = max(dot(n, light), 0.0);
   float heart = smoothstep(0.5, 0.12, br);
 
@@ -105,6 +105,13 @@ void main() {
   vec3 satin = vec3(0.12, 0.11, 0.105) * (0.2 + 0.95 * lit);
   satin += champagne * (spec * 0.45 + sheen * 0.12) * (0.85 + 0.15 * fibre);
   satin = mix(satin, satin * vec3(1.7, 0.8, 0.45), heart * 0.75);
+
+  // a crisp lit lip and a dark inner edge give each giant petal a clean silhouette
+  float lip = smoothstep(-0.018, -0.004, big.w) * smoothstep(0.0, -0.004, big.w);
+  vec2 outward = rotate(normalize(big.xy + 1e-5), GIANT_TURN);
+  float facing = max(dot(outward, normalize(light.xy)), 0.0);
+  satin += champagne * lip * (0.1 + 0.55 * facing);
+  satin *= 1.0 - smoothstep(-0.05, -0.012, big.w) * (1.0 - lip) * 0.35;
 
   float castD = relief(bq + rotate(vec2(0.0, 0.035), -GIANT_TURN)).w;
   float occlude = 1.0 - smoothstep(-0.01, 0.09, castD);
@@ -122,40 +129,15 @@ void main() {
   lightCol = mix(vec3(0.961, 0.961, 0.969), lightCol, mix(0.35, 1.0, veil));
   vec3 col = mix(lightCol, darkCol, u_dark);
 
-  vec2 q = (frag - u_center) / max(u_size, 1.0);
-  float shadowD = relief(q - vec2(0.03, 0.08)).w;
-  col *= 1.0 - (1.0 - smoothstep(-0.03, 0.22, shadowD)) * 0.55;
-
-  vec4 rel = relief(q);
-  float px = 1.0 / max(u_size, 1.0);
-  float coverage = smoothstep(px, -px, rel.w);
-
-  if (coverage > 0.0) {
-    vec3 ln = normalize(vec3(rel.xy * 0.6, sqrt(max(1.0 - dot(rel.xy, rel.xy), 0.0))));
-    vec2 lr = normalize(q + 1e-5);
-    float weave = noise(lr * 12.0 + vec2(length(q) * 2.5 - t * 0.04, 0.0)) * 0.65
-      + noise(lr * 27.0 + vec2(0.0, length(q) * 4.0)) * 0.35;
-    weave = smoothstep(0.15, 0.9, weave);
-    float fh = dot(vec3(lr, 0.0), half_);
-    float glint = pow(sqrt(max(1.0 - fh * fh, 0.0)), 36.0);
-    float llit = max(dot(ln, light), 0.0);
-    vec3 logo = ORANGE * (0.22 + 0.78 * llit) * (0.84 + 0.16 * weave);
-    logo += vec3(1.0, 0.78, 0.58) * glint * (0.55 + 0.45 * weave) * (0.35 + 0.65 * ln.z);
-    logo *= mix(0.5, 1.0, smoothstep(0.0, 0.5, ln.z));
-    col = mix(col, logo, coverage);
-  }
-
   col += (hash2(frag + fract(t)) - 0.5) / 255.0;
   gl_FragColor = vec4(col, 1.0);
 }
 `;
 
 export default function PetalField({
-  flowerRef,
   veilRef,
   className,
 }: {
-  flowerRef: RefObject<HTMLElement | null>;
   veilRef: RefObject<HTMLElement | null>;
   className?: string;
 }) {
@@ -200,8 +182,6 @@ export default function PetalField({
     const uTime = u("u_time");
     const uDark = u("u_dark");
     const uPointer = u("u_pointer");
-    const uCenter = u("u_center");
-    const uSize = u("u_size");
     const uVeil = u("u_veil");
     gl.uniform1i(u("u_relief"), 0);
 
@@ -214,16 +194,7 @@ export default function PetalField({
 
     const measure = () => {
       const box = canvas.getBoundingClientRect();
-      const flower = flowerRef.current?.getBoundingClientRect();
       const veil = veilRef.current?.getBoundingClientRect();
-      if (flower) {
-        gl.uniform2f(
-          uCenter,
-          (flower.left + flower.width / 2 - box.left) * scale,
-          (box.bottom - (flower.top + flower.height / 2)) * scale,
-        );
-        gl.uniform1f(uSize, (flower.width / 2) * scale);
-      }
       if (veil) {
         gl.uniform4f(
           uVeil,
@@ -284,7 +255,6 @@ export default function PetalField({
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(canvas);
-    if (flowerRef.current) resizeObserver.observe(flowerRef.current);
     if (veilRef.current) resizeObserver.observe(veilRef.current);
 
     const visibilityObserver = new IntersectionObserver(([entry]) => {
@@ -305,7 +275,7 @@ export default function PetalField({
       gl.deleteBuffer(quad);
       compiled.dispose();
     };
-  }, [flowerRef, veilRef]);
+  }, [veilRef]);
 
   return (
     <canvas

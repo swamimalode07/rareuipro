@@ -5,6 +5,9 @@ export const RELIEF_SIZE = 512;
 // shader decodes blue as signed distance in [-DIST_RANGE, DIST_RANGE] flower units
 export const DIST_RANGE = 0.25;
 
+// alpha holds the same distance over a narrow band, precise enough for crisp edges when magnified
+export const EDGE_RANGE = 0.04;
+
 const BEVEL = 0.2;
 const SMOOTH_PX = 8;
 const EDGE_SMOOTH_PX = 2;
@@ -149,7 +152,9 @@ export function buildFlowerRelief() {
       out[o + 2] = Math.round(
         Math.min(Math.max(0.5 + signed[y * n + x] / (2 * DIST_RANGE), 0), 1) * 255,
       );
-      out[o + 3] = 255;
+      out[o + 3] = Math.round(
+        Math.min(Math.max(0.5 + signed[y * n + x] / (2 * EDGE_RANGE), 0), 1) * 255,
+      );
     }
   }
   return out;

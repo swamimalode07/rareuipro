@@ -19,7 +19,6 @@ const AGENTS = [
 ];
 
 export default function ProHero() {
-  const flowerRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -31,12 +30,10 @@ export default function ProHero() {
 
   return (
     <>
-      <PetalField flowerRef={flowerRef} veilRef={veilRef} />
+      <PetalField veilRef={veilRef} />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-4 pb-16 pt-28 text-center sm:px-6 md:pt-32">
-        <div ref={flowerRef} aria-hidden="true" className="size-32 sm:size-44" />
-
-        <div ref={veilRef} className="mt-12 flex flex-col items-center sm:mt-16">
+        <div ref={veilRef} className="flex flex-col items-center">
           <motion.h1
             {...rise(0)}
             className="max-w-4xl text-balance font-runde text-[2.6rem] font-bold leading-[0.95] tracking-[-0.045em] text-black dark:text-white sm:text-6xl md:text-7xl lg:text-[5.5rem]"
