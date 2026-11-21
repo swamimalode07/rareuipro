@@ -9,9 +9,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
-  { label: "Home", href: "/" },
   { label: "Components", href: "/components" },
-  { label: "Account", href: "/account" },
+  { label: "Templates", href: "/templates" },
 ];
 
 const pill =
@@ -22,6 +21,7 @@ export default function GooeyNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [logoHovered, setLogoHovered] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pro, setPro] = useState(false);
   const reduceMotion = useReducedMotion();
 
   const morphSpring = { type: "spring", stiffness: 250, damping: 24 } as const;
@@ -33,6 +33,21 @@ export default function GooeyNavbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/me", { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((me: { pro?: boolean } | null) => setPro(Boolean(me?.pro)))
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
+
+  // signed-out visitors land on sign-in from /account, then come back to it
+  const accountLink = pro
+    ? { label: "Account", href: "/account" }
+    : { label: "Get Pro", href: "/account" };
+  const menuLinks = [...LINKS, accountLink];
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -100,7 +115,7 @@ export default function GooeyNavbar() {
                 href={link.href}
                 className={cn(
                   "px-3.5 text-sm",
-                  pathname === link.href
+                  pathname.startsWith(link.href)
                     ? "text-neutral-900 dark:text-white"
                     : "text-neutral-500 transition-colors duration-150 ease-out hover:text-neutral-900 dark:text-white/60 dark:hover:text-white",
                 )}
@@ -122,6 +137,17 @@ export default function GooeyNavbar() {
               "flex h-12 w-12 items-center justify-center p-0 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 dark:text-white/80 dark:hover:bg-neutral-800 dark:hover:text-white [&_svg]:h-6 [&_svg]:w-6",
             )}
           />
+          <Link
+            href={accountLink.href}
+            className={cn(
+              "flex h-12 items-center rounded-full px-5 font-runde text-sm font-semibold transition-colors duration-150 ease-out",
+              pro
+                ? cn(pill, "text-neutral-900 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-800")
+                : "bg-[#FC4C01] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] hover:bg-[#ff5a12]",
+            )}
+          >
+            {accountLink.label}
+          </Link>
         </motion.div>
 
         <motion.button
@@ -164,7 +190,7 @@ export default function GooeyNavbar() {
             className="pointer-events-auto fixed inset-0 z-0 bg-[#F5F5F7]/85 backdrop-blur-2xl md:hidden dark:bg-neutral-950/85"
           >
             <div className="flex h-full flex-col items-center justify-center gap-7 px-6">
-              {LINKS.map((link, i) => (
+              {menuLinks.map((link, i) => (
                 <motion.div
                   key={link.href}
                   initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
@@ -198,7 +224,7 @@ export default function GooeyNavbar() {
                 transition={
                   reduceMotion
                     ? { duration: 0 }
-                    : { ...popSpring, delay: 0.06 + LINKS.length * 0.06 }
+                    : { ...popSpring, delay: 0.06 + menuLinks.length * 0.06 }
                 }
                 className="mt-3 flex items-center gap-2"
               >

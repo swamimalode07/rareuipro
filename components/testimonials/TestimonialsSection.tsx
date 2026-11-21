@@ -3,7 +3,7 @@ import TestimonialMarquee from "./TestimonialMarquee";
 
 export default function TestimonialsSection() {
   return (
-    <section className="mx-auto w-full max-w-6xl px-5 pb-24 sm:px-6 md:pb-32">
+    <section className="mx-auto w-full max-w-6xl px-5 py-24 sm:px-6 md:py-32">
       <header className="flex flex-col items-center gap-3 text-center">
         <h2 className="max-w-2xl text-balance font-runde text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
           Loved by the people who ship
@@ -14,7 +14,7 @@ export default function TestimonialsSection() {
         </p>
       </header>
 
-      <TestimonialMarquee className="mt-12" />
+      <TestimonialMarquee className="mt-10" />
 
       <div className="mt-8 flex justify-center">
         <Link

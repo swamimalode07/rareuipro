@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { Squircle } from "@squircle-js/react";
+import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import HeroCta from "@/components/HeroCta";
 import { ClaudeLogo, CursorLogo, OpenaiLogo, VscodeLogo } from "@/components/logos";
@@ -38,34 +38,35 @@ export default function ProHero() {
             {...rise(0)}
             className="max-w-4xl text-balance font-runde text-[2.6rem] font-bold leading-[0.95] tracking-[-0.045em] text-black dark:text-white sm:text-6xl md:text-7xl lg:text-[5.5rem]"
           >
-            Tasteful components,
+            Tasteful interfaces,
             <br />
-            <span className="text-black/40 dark:text-white/45">made to stand out.</span>
+            <span className="text-black/40 dark:text-white/45">made to feel rare.</span>
           </motion.h1>
 
           <motion.p
             {...rise(1)}
-            className="mt-6 max-w-xl text-balance font-medium text-black/60 dark:text-white/60 sm:text-lg"
+            className="mt-4 max-w-xl text-balance font-medium text-black/60 dark:text-white/60 sm:text-lg"
           >
-            Rare animated React components you would never find time to build.
-            Each one installs with the shadcn CLI as a single file you own.
+            Components, blocks and templates with motion built in. Install any of them with the shadcn CLI.
           </motion.p>
 
-          <motion.div {...rise(2)} className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <motion.div {...rise(2)} className="mt-9 flex flex-wrap items-center justify-center gap-2">
             <HeroCta />
-            <Squircle asChild cornerRadius={16} cornerSmoothing={1}>
-              <Link
-                href="/components"
-                className="mt-4 flex h-12 items-center bg-black/[0.06] ring-1 ring-inset ring-black/[0.06] dark:ring-white/[0.08] px-6 font-runde text-sm font-semibold text-black transition-colors duration-150 ease-out hover:bg-black/[0.1] dark:bg-white/[0.08] dark:text-white dark:hover:bg-white/[0.13]"
-              >
-                Browse components
-              </Link>
-            </Squircle>
+            <Link
+              href="/account"
+              className="group flex h-11 items-center gap-1.5 rounded-[14px] px-4 font-runde text-[15px] font-semibold text-black/60 transition-colors duration-150 ease-out hover:bg-black/[0.05] hover:text-black dark:text-white/70 dark:hover:bg-white/[0.07] dark:hover:text-white"
+            >
+              View pricing
+              <ArrowRight
+                aria-hidden="true"
+                className="size-4 transition-transform duration-200 ease-out motion-safe:group-hover:translate-x-0.5"
+              />
+            </Link>
           </motion.div>
 
           <motion.div
             {...rise(3)}
-            className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[13px] font-medium text-black/50 dark:text-white/50"
+            className="mt-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[13px] font-medium text-black/50 dark:text-white/50"
           >
             <span>Works with</span>
             <span className="sr-only">{AGENTS.map((agent) => agent.name).join(", ")}</span>
