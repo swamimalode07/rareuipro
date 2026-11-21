@@ -42,7 +42,15 @@ export type FlowerMaps = {
 };
 
 // the browser rasterizes the real petal curves at screen resolution, so edges are exact at any size
-export function buildFlowerMaps(width: number, height: number, radius: number, bevel: number): FlowerMaps | null {
+// cx and cy place the flower centre in canvas pixels, measured from the top left
+export function buildFlowerMaps(
+  width: number,
+  height: number,
+  cx: number,
+  cy: number,
+  radius: number,
+  bevel: number,
+): FlowerMaps | null {
   const petals = paths();
 
   const mask = document.createElement("canvas");
@@ -50,7 +58,7 @@ export function buildFlowerMaps(width: number, height: number, radius: number, b
   mask.height = height;
   const maskCtx = mask.getContext("2d");
   if (!maskCtx) return null;
-  drawFlower(maskCtx, width / 2, height / 2, radius, petals);
+  drawFlower(maskCtx, cx, cy, radius, petals);
 
   const lowBevel = bevel / HEIGHT_DOWNSCALE;
   // padding keeps the blur from fading the petals where they run off the canvas
@@ -63,8 +71,8 @@ export function buildFlowerMaps(width: number, height: number, radius: number, b
   const heightCtx = heightMap.getContext("2d");
   if (!heightCtx) return null;
 
-  const lowCx = pad + width / HEIGHT_DOWNSCALE / 2;
-  const lowCy = pad + height / HEIGHT_DOWNSCALE / 2;
+  const lowCx = pad + cx / HEIGHT_DOWNSCALE;
+  const lowCy = pad + cy / HEIGHT_DOWNSCALE;
   const lowRadius = radius / HEIGHT_DOWNSCALE;
 
   if (supportsFilter(heightCtx)) {

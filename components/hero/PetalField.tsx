@@ -10,7 +10,6 @@ const MAX_DPR = 2;
 const TOUCH_DPR = 1.5;
 // keeps 4k and 5k displays smooth; below this budget the canvas renders at full device resolution
 const MAX_PIXELS = 6_000_000;
-const GIANT = 1.4;
 const BEVEL = 0.14;
 const POINTER_EASE = 0.06;
 
@@ -25,6 +24,7 @@ const FRAG = `
 precision highp float;
 
 uniform vec2 u_resolution;
+uniform vec2 u_center;
 uniform float u_time;
 uniform float u_dark;
 uniform vec2 u_pointer;
@@ -96,7 +96,7 @@ void main() {
   vec3 light = normalize(vec3(cos(la), sin(la) + u_pointer.y * 0.3, 0.8));
   vec3 half_ = normalize(light + vec3(0.0, 0.0, 1.0));
 
-  vec2 bq = (frag - 0.5 * u_resolution) / u_radius;
+  vec2 bq = (frag - u_center) / u_radius;
   float br = length(bq);
 
   // the height map is 8-bit, so its slope is read across a wide span or the steps show as contour lines
@@ -151,11 +151,18 @@ void main() {
 
 export default function PetalField({
   veilRef,
+  center = [0.5, 0.5],
+  size = 1.4,
   className,
 }: {
-  veilRef: RefObject<HTMLElement | null>;
+  veilRef?: RefObject<HTMLElement | null>;
+  // flower centre as a fraction of the canvas, measured from the top left; it may sit off canvas
+  center?: [number, number];
+  // flower radius as a multiple of the canvas's shorter side
+  size?: number;
   className?: string;
 }) {
+  const [centerX, centerY] = center;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const darkRef = useRef(1);
   const redrawRef = useRef<() => void>(() => {});
@@ -224,6 +231,7 @@ export default function PetalField({
       const uDark = u("u_dark");
       const uPointer = u("u_pointer");
       const uVeil = u("u_veil");
+      const uCenter = u("u_center");
       const uRadius = u("u_radius");
       const uBevel = u("u_bevel");
       const uPx = u("u_px");
@@ -234,8 +242,12 @@ export default function PetalField({
       let shown = false;
 
       const measureVeil = () => {
-        const veil = veilRef.current?.getBoundingClientRect();
-        if (!veil) return;
+        const veil = veilRef?.current?.getBoundingClientRect();
+        if (!veil) {
+          // far away, so the veil never darkens anything
+          gl.uniform4f(uVeil, -1e5, -1e5, 1, 1);
+          return;
+        }
         const box = canvas.getBoundingClientRect();
         gl.uniform4f(
           uVeil,
@@ -279,9 +291,11 @@ export default function PetalField({
           gl.viewport(0, 0, w, h);
         }
 
-        const radius = Math.min(w, h) * GIANT;
+        const radius = Math.min(w, h) * size;
+        const cx = w * centerX;
+        const cy = h * centerY;
         const bevel = radius * BEVEL;
-        const maps = buildFlowerMaps(w, h, radius, bevel);
+        const maps = buildFlowerMaps(w, h, cx, cy, radius, bevel);
         if (maps) {
           upload(0, maskTexture, maps.mask);
           upload(1, heightTexture, maps.height);
@@ -289,6 +303,7 @@ export default function PetalField({
         }
         gl.uniform2f(uResolution, w, h);
         gl.uniform1f(uRadius, radius);
+        gl.uniform2f(uCenter, cx, h - cy);
         gl.uniform1f(uBevel, bevel);
         gl.uniform1f(uPx, scale);
         measureVeil();
@@ -320,7 +335,7 @@ export default function PetalField({
         resizeFrame = requestAnimationFrame(resize);
       });
       resizeObserver.observe(canvas);
-      if (veilRef.current) resizeObserver.observe(veilRef.current);
+      if (veilRef?.current) resizeObserver.observe(veilRef.current);
 
       const visibilityObserver = new IntersectionObserver(([entry]) => {
         visible = entry?.isIntersecting ?? true;
@@ -372,7 +387,7 @@ export default function PetalField({
       dispose?.();
       if (!canvas.isConnected) canvas.getContext("webgl")?.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [veilRef]);
+  }, [veilRef, centerX, centerY, size]);
 
   return (
     <canvas

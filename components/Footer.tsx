@@ -1,67 +1,43 @@
-import { Fragment } from "react";
 import Link from "next/link";
 import { SUPPORT_EMAIL } from "@/lib/legal";
 import { SITE_URL } from "@/lib/site";
-import FluidWave from "./FluidWave";
-import { XLogo, type LogoProps } from "./logos";
+import HeroCta from "./HeroCta";
+import PetalField from "./hero/PetalField";
+import { XLogo } from "./logos";
 
 const X_URL = "https://x.com/swamimalode";
 const DMCA_ID = "ee2a2636-6919-4dcc-a846-c70b066419b8";
 const DMCA_STATUS_URL = `https://www.dmca.com/Protection/Status.aspx?ID=${DMCA_ID}&refurl=${SITE_URL}`;
 
-type FooterLink = {
-  label: string;
-  href: string;
-  external?: boolean;
-  icon?: (props: LogoProps) => React.ReactElement;
-};
-
-const LINKS: FooterLink[] = [
-  { label: "Home", href: "/" },
-  { label: "Components", href: "/components" },
-  { label: "X / Twitter", href: X_URL, external: true, icon: XLogo },
-];
-
-const UTILITY_LINKS = [
-  { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms of Service", href: "/terms" },
-  { label: "Sitemap", href: "/sitemap.xml" },
-  { label: "robots.txt", href: "/robots.txt" },
+const COLUMNS = [
+  {
+    title: "Product",
+    links: [
+      { label: "Components", href: "/components" },
+      { label: "Templates", href: "/templates" },
+      { label: "Get Pro", href: "/account" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { label: "Testimonials", href: "/testimonials" },
+      { label: "Sitemap", href: "/sitemap.xml" },
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+    ],
+  },
 ];
 
 const HOVER =
   "transition-colors duration-150 ease-out hover:text-black dark:hover:text-white";
 
 const MUTED = "text-black/50 dark:text-white/50";
-
-function NavLink({ label, href, external, icon: Icon }: FooterLink) {
-  const className = `w-fit ${Icon ? "flex items-center" : "text-lg"} ${MUTED} ${HOVER}`;
-  const content = Icon ? <Icon className="h-[1.375rem] w-[1.375rem]" /> : label;
-
-  if (external) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        className={className}
-        aria-label={Icon ? label : undefined}
-      >
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <Link
-      href={href}
-      className={className}
-      aria-label={Icon ? label : undefined}
-    >
-      {content}
-    </Link>
-  );
-}
 
 function DmcaBadge() {
   return (
@@ -85,82 +61,77 @@ function DmcaBadge() {
 export default function Footer() {
   return (
     <footer className="relative w-full overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-      <FluidWave />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-linear-to-b from-white to-transparent dark:from-black" />
+      <div className="mx-auto w-full max-w-6xl px-6 pt-20 sm:px-10 md:pt-28">
+        <div className="h-px w-full bg-black/[0.08] dark:bg-white/10" />
 
-      <div className="relative mx-auto flex min-h-[min(40svh,50rem)] w-full max-w-[96rem] flex-col px-6 pt-10 sm:min-h-[min(85svh,50rem)] sm:px-10 sm:pt-24 md:pt-32">
-        <div className="h-px w-full bg-white/10" />
+        <div className="flex flex-col gap-12 py-12 md:flex-row md:justify-between">
+          <div className="flex max-w-xs flex-col gap-4">
+            <Link href="/" className="flex w-fit items-center gap-2.5">
+              <img src="/logos/Rareui.svg" alt="" className="size-7" />
+              <span className="font-runde text-xl font-bold tracking-tight">
+                Rare UI Pro
+              </span>
+            </Link>
+            <p className={`text-sm font-medium leading-relaxed ${MUTED}`}>
+              Tasteful interfaces, made to feel rare.
+            </p>
+            <a
+              href={X_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="X / Twitter"
+              className={`w-fit ${MUTED} ${HOVER}`}
+            >
+              <XLogo className="size-5" />
+            </a>
+          </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-6 py-8">
-          <Link href="/" className="flex h-fit w-fit items-center gap-2.5">
-            <img src="/logos/Rareui.svg" alt="" className="h-8 w-8" />
-            <span className="font-runde text-2xl font-bold tracking-tight">
-              Rare UI
-            </span>
-          </Link>
-
-          <nav className="flex flex-wrap items-center gap-x-7 gap-y-2">
-            {LINKS.map((link, index) => (
-              <Fragment key={link.label}>
-                {link.icon && !LINKS[index - 1]?.icon && (
-                  <span
-                    aria-hidden="true"
-                    className="-mx-3 text-lg text-black/25 dark:text-white/25"
+          <nav className="grid grid-cols-2 gap-x-14 gap-y-10 sm:grid-cols-3">
+            {COLUMNS.map((column) => (
+              <div key={column.title} className="flex flex-col gap-3.5">
+                <span className="font-runde text-sm font-semibold">
+                  {column.title}
+                </span>
+                {column.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`w-fit text-sm font-medium ${MUTED} ${HOVER}`}
                   >
-                    |
-                  </span>
-                )}
-                <NavLink {...link} />
-              </Fragment>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             ))}
           </nav>
         </div>
+      </div>
 
-        <div className="flex flex-1 items-center py-16">
-          <h2 className="selection-contrast font-runde text-[clamp(3rem,12.5vw,10.5rem)] font-bold leading-[0.92] tracking-tight">
-            Tasteful Components
-          </h2>
+      <div className="relative h-[min(70svh,40rem)] min-h-[24rem]">
+        <PetalField center={[0.5, 1.5]} size={1.9} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-linear-to-b from-white to-transparent dark:from-black" />
+
+        <div className="relative flex h-full flex-col items-center justify-center gap-5 px-6 pb-20 text-center">
+          <img src="/logos/Rareui.svg" alt="" className="size-10" />
+          <p className="max-w-sm text-balance font-runde text-lg font-semibold text-black/70 dark:text-white/70">
+            Every component, block and template. One license.
+          </p>
+          <HeroCta />
         </div>
 
         <div
-          className={`selection-contrast flex flex-wrap items-center justify-between gap-3 pb-8 text-xs ${MUTED}`}
+          className={`selection-contrast absolute inset-x-0 bottom-0 mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-6 pb-6 text-xs sm:px-10 ${MUTED}`}
         >
           <span className="flex flex-wrap items-center gap-2.5">
             <span>Rare UI &copy; {new Date().getFullYear()}</span>
-            <span
-              aria-hidden="true"
-              className="text-black/25 dark:text-white/25"
-            >
+            <span aria-hidden="true" className="text-black/25 dark:text-white/25">
               &middot;
             </span>
             <a href={`mailto:${SUPPORT_EMAIL}`} className={HOVER}>
-              Support: {SUPPORT_EMAIL}
+              {SUPPORT_EMAIL}
             </a>
           </span>
-          <span className="flex flex-wrap items-center gap-2.5">
-            {UTILITY_LINKS.map((link, index) => (
-              <Fragment key={link.href}>
-                {index > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className="text-black/25 dark:text-white/25"
-                  >
-                    &middot;
-                  </span>
-                )}
-                <a href={link.href} className={HOVER}>
-                  {link.label}
-                </a>
-              </Fragment>
-            ))}
-            <span
-              aria-hidden="true"
-              className="text-black/25 dark:text-white/25"
-            >
-              &middot;
-            </span>
-            <DmcaBadge />
-          </span>
+          <DmcaBadge />
         </div>
       </div>
     </footer>
