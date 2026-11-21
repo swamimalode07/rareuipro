@@ -1,6 +1,6 @@
 import { RAREUI_PETALS } from "@/components/logos";
 
-export const RELIEF_SIZE = 512;
+export const RELIEF_SIZE = 1024;
 
 // shader decodes blue as signed distance in [-DIST_RANGE, DIST_RANGE] flower units
 export const DIST_RANGE = 0.25;
@@ -9,8 +9,7 @@ export const DIST_RANGE = 0.25;
 export const EDGE_RANGE = 0.04;
 
 const BEVEL = 0.2;
-const SMOOTH_PX = 8;
-const EDGE_SMOOTH_PX = 2;
+const SMOOTH_PX = 16;
 const PIVOT_X = 131;
 const PIVOT_Y = 136;
 const FILL = 0.42;
@@ -39,9 +38,9 @@ function edt1d(f: Float64Array, n: number, d: Float64Array, v: Int32Array, z: Fl
   }
 }
 
-function distanceTo(feature: Uint8Array, n: number) {
-  const grid = new Float64Array(n * n);
-  for (let i = 0; i < n * n; i++) grid[i] = feature[i] ? 0 : INF;
+// seeds hold squared sub-pixel distances to the edge, read from anti-aliased coverage, so the field has no staircase
+function distanceTo(seed: Float64Array, n: number) {
+  const grid = seed;
 
   const f = new Float64Array(n);
   const d = new Float64Array(n);
@@ -61,41 +60,121 @@ function distanceTo(feature: Uint8Array, n: number) {
   return grid;
 }
 
-// distance fields crease along each petal's spine; blurring melts those creases into liquid curves
+// three box passes approximate a gaussian at a cost that does not grow with the radius
 function blur(field: Float64Array, n: number, sigma: number) {
-  const radius = Math.ceil(sigma * 2.5);
-  const kernel = new Float64Array(radius * 2 + 1);
-  let sum = 0;
-  for (let i = -radius; i <= radius; i++) {
-    kernel[i + radius] = Math.exp(-(i * i) / (2 * sigma * sigma));
-    sum += kernel[i + radius];
-  }
-  for (let i = 0; i < kernel.length; i++) kernel[i] /= sum;
-
-  const tmp = new Float64Array(n * n);
-  for (let y = 0; y < n; y++) {
-    for (let x = 0; x < n; x++) {
+  const radius = Math.max(1, Math.round(sigma));
+  const line = new Float64Array(n);
+  const pass = (stride: number, step: number) => {
+    for (let l = 0; l < n; l++) {
+      const base = l * stride;
+      for (let i = 0; i < n; i++) line[i] = field[base + i * step];
       let acc = 0;
-      for (let i = -radius; i <= radius; i++) {
-        acc += field[y * n + Math.min(Math.max(x + i, 0), n - 1)] * kernel[i + radius];
+      for (let i = -radius; i <= radius; i++) acc += line[Math.min(Math.max(i, 0), n - 1)];
+      for (let i = 0; i < n; i++) {
+        field[base + i * step] = acc / (radius * 2 + 1);
+        acc += line[Math.min(i + radius + 1, n - 1)] - line[Math.max(i - radius, 0)];
       }
-      tmp[y * n + x] = acc;
     }
-  }
-  for (let y = 0; y < n; y++) {
-    for (let x = 0; x < n; x++) {
-      let acc = 0;
-      for (let i = -radius; i <= radius; i++) {
-        acc += tmp[Math.min(Math.max(y + i, 0), n - 1) * n + x] * kernel[i + radius];
-      }
-      field[y * n + x] = acc;
-    }
+  };
+  for (let k = 0; k < 3; k++) {
+    pass(n, 1);
+    pass(1, n);
   }
 }
 
 function height(d: number) {
   const u = Math.min(Math.max(-d / BEVEL, 0), 1);
   return BEVEL * Math.sqrt(1 - (1 - u) * (1 - u));
+}
+
+const CURVE_STEPS = 48;
+const BAND_TEXELS = 22;
+const CELL = 16;
+
+type Segment = { ax: number; ay: number; bx: number; by: number; side: number };
+
+// petal paths only use absolute M, L, C and Z, which keeps this flattener small
+function flattenPetal(d: string, map: (x: number, y: number) => [number, number]) {
+  const tokens = d.match(/[MLCZ]|-?\d*\.?\d+(?:e-?\d+)?/gi) ?? [];
+  const points: [number, number][] = [];
+  let i = 0;
+  let cmd = "";
+  let cx = 0;
+  let cy = 0;
+  const num = () => parseFloat(tokens[i++]);
+  while (i < tokens.length) {
+    if (/[MLCZ]/i.test(tokens[i])) cmd = tokens[i++].toUpperCase();
+    if (cmd === "Z") break;
+    if (cmd === "M" || cmd === "L") {
+      cx = num();
+      cy = num();
+      points.push([cx, cy]);
+    } else if (cmd === "C") {
+      const x1 = num(), y1 = num(), x2 = num(), y2 = num(), x = num(), y = num();
+      for (let k = 1; k <= CURVE_STEPS; k++) {
+        const t = k / CURVE_STEPS;
+        const u = 1 - t;
+        points.push([
+          u * u * u * cx + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x,
+          u * u * u * cy + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y,
+        ]);
+      }
+      cx = x;
+      cy = y;
+    }
+  }
+  const mapped = points.map(([x, y]) => map(x, y));
+  let area = 0;
+  for (let k = 0; k < mapped.length; k++) {
+    const [ax, ay] = mapped[k];
+    const [bx, by] = mapped[(k + 1) % mapped.length];
+    area += ax * by - bx * ay;
+  }
+  const side = Math.sign(area) || 1;
+  const segments: Segment[] = [];
+  for (let k = 0; k < mapped.length; k++) {
+    const [ax, ay] = mapped[k];
+    const [bx, by] = mapped[(k + 1) % mapped.length];
+    if (ax !== bx || ay !== by) segments.push({ ax, ay, bx, by, side });
+  }
+  return segments;
+}
+
+// exact signed distance, in texels, to the true curves for every texel near an edge
+function refineEdges(signedTexels: Float64Array, n: number, segments: Segment[]) {
+  const cells = Math.ceil(n / CELL);
+  const buckets: Segment[][] = Array.from({ length: cells * cells }, () => []);
+  for (const seg of segments) {
+    const x0 = Math.max(0, Math.floor((Math.min(seg.ax, seg.bx) - BAND_TEXELS) / CELL));
+    const x1 = Math.min(cells - 1, Math.floor((Math.max(seg.ax, seg.bx) + BAND_TEXELS) / CELL));
+    const y0 = Math.max(0, Math.floor((Math.min(seg.ay, seg.by) - BAND_TEXELS) / CELL));
+    const y1 = Math.min(cells - 1, Math.floor((Math.max(seg.ay, seg.by) + BAND_TEXELS) / CELL));
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) buckets[y * cells + x].push(seg);
+  }
+
+  for (let y = 0; y < n; y++) {
+    for (let x = 0; x < n; x++) {
+      const i = y * n + x;
+      if (Math.abs(signedTexels[i]) > BAND_TEXELS - 2) continue;
+      const px = x + 0.5;
+      const py = y + 0.5;
+      let best = INF;
+      let sign = 1;
+      for (const seg of buckets[Math.floor(py / CELL) * cells + Math.floor(px / CELL)]) {
+        const dx = seg.bx - seg.ax;
+        const dy = seg.by - seg.ay;
+        const t = Math.min(Math.max(((px - seg.ax) * dx + (py - seg.ay) * dy) / (dx * dx + dy * dy), 0), 1);
+        const ex = px - (seg.ax + dx * t);
+        const ey = py - (seg.ay + dy * t);
+        const dist = ex * ex + ey * ey;
+        if (dist < best) {
+          best = dist;
+          sign = Math.sign(dx * (py - seg.ay) - dy * (px - seg.ax)) * seg.side || 1;
+        }
+      }
+      if (best < INF) signedTexels[i] = -sign * Math.sqrt(best);
+    }
+  }
 }
 
 export function buildFlowerRelief() {
@@ -114,25 +193,31 @@ export function buildFlowerRelief() {
   for (const d of RAREUI_PETALS) ctx.fill(new Path2D(d));
 
   const alpha = ctx.getImageData(0, 0, n, n).data;
-  const inside = new Uint8Array(n * n);
-  const outside = new Uint8Array(n * n);
+  const insideSeed = new Float64Array(n * n);
+  const outsideSeed = new Float64Array(n * n);
   for (let i = 0; i < n * n; i++) {
-    inside[i] = alpha[i * 4 + 3] > 127 ? 1 : 0;
-    outside[i] = 1 - inside[i];
+    const a = alpha[i * 4 + 3] / 255;
+    insideSeed[i] = a >= 0.5 ? 0 : a > 0 ? (0.5 - a) ** 2 : INF;
+    outsideSeed[i] = a <= 0.5 ? 0 : a < 1 ? (a - 0.5) ** 2 : INF;
   }
 
-  const toInside = distanceTo(inside, n);
-  const toOutside = distanceTo(outside, n);
+  const toInside = distanceTo(insideSeed, n);
+  const toOutside = distanceTo(outsideSeed, n);
 
   const unit = 2 / n;
   const signed = new Float64Array(n * n);
   const h = new Float64Array(n * n);
+  for (let i = 0; i < n * n; i++) signed[i] = toInside[i] - toOutside[i];
+
+  const map = (x: number, y: number): [number, number] => [
+    (x - PIVOT_X) * scale + n / 2,
+    (y - PIVOT_Y) * scale + n / 2,
+  ];
+  refineEdges(signed, n, RAREUI_PETALS.flatMap((d) => flattenPetal(d, map)));
   for (let i = 0; i < n * n; i++) {
-    signed[i] = (toInside[i] - toOutside[i]) * unit;
+    signed[i] *= unit;
+    h[i] = height(signed[i]);
   }
-  // the backdrop magnifies this field many times, so soften the pixel staircase of the mask
-  blur(signed, n, EDGE_SMOOTH_PX);
-  for (let i = 0; i < n * n; i++) h[i] = height(signed[i]);
 
   blur(h, n, SMOOTH_PX);
 

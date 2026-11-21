@@ -7,7 +7,8 @@ import { buildFlowerRelief, DIST_RANGE, EDGE_RANGE, RELIEF_SIZE } from "@/lib/fl
 import { cn } from "@/lib/utils";
 
 const MAX_DPR = 2;
-const RESOLUTION_SCALE = 0.9;
+// keeps 4k and 5k displays smooth; below this budget the canvas renders at full device resolution
+const MAX_PIXELS = 5_600_000;
 const POINTER_EASE = 0.05;
 
 const VERT = `
@@ -33,7 +34,7 @@ uniform sampler2D u_relief;
 
 const float GIANT = 1.4;
 const float GIANT_TURN = 0.0;
-const float PLEATS = 22.0;
+const float PLEATS = 40.0;
 
 float hash2(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -84,34 +85,38 @@ void main() {
   vec2 radial = normalize(bq + 1e-5);
   vec2 around = vec2(-radial.y, radial.x);
 
-  // pleats fan out from the heart and wander slowly, so the satin catches light in moving folds
-  float warp = noise(radial * 1.6 + vec2(br * 1.4 - t * 0.04, t * 0.02)) * 3.2;
-  float phase = atan(bq.y, bq.x) * PLEATS + warp + br * 4.0;
-  vec2 nb = rotate(big.xy * 1.1 + around * cos(phase) * 0.42, GIANT_TURN);
+  // knife pleats fan out from the heart: flat facets with sharp creases, so highlights land as crisp lines
+  float warp = noise(radial * 1.6 + vec2(br * 1.4 - t * 0.04, t * 0.02)) * 2.4;
+  float phase = (atan(bq.y, bq.x) * PLEATS + warp + br * 3.0) / 6.2831853;
+  // crease width stays about three canvas pixels at any radius, wide enough to never stair-step
+  float periodPx = 6.2831853 * br * g / PLEATS;
+  float crease = clamp(periodPx / 3.0, 2.0, 400.0);
+  float tilt = clamp((fract(phase) - 0.5) * crease, -1.0, 1.0);
+  vec2 nb = rotate(big.xy * 0.7 + around * tilt * 0.38, GIANT_TURN);
   vec3 n = normalize(vec3(nb, 1.0));
   vec2 fibreDir = rotate(radial, GIANT_TURN);
 
-  float fibre = noise(radial * 95.0 + vec2(0.0, br * 5.0 - t * 0.05)) * 0.6
-    + noise(radial * 240.0 + vec2(br * 9.0, 0.0)) * 0.4;
-  fibre = smoothstep(0.2, 0.9, fibre);
+  float fibre = noise(radial * 160.0 + vec2(0.0, br * 6.0 - t * 0.05)) * 0.55
+    + noise(radial * 420.0 + vec2(br * 12.0, 0.0)) * 0.45;
+  fibre = smoothstep(0.25, 0.85, fibre);
   float th = dot(vec3(fibreDir, 0.0), half_);
   float sheen = pow(sqrt(max(1.0 - th * th, 0.0)), 40.0);
   float nh = max(dot(n, half_), 0.0);
-  float spec = pow(nh, 40.0) * 0.8 + pow(nh, 8.0) * 0.25;
+  float spec = pow(nh, 90.0) * 0.9 + pow(nh, 10.0) * 0.18;
   float lit = max(dot(n, light), 0.0);
   float heart = smoothstep(0.5, 0.12, br);
 
   vec3 champagne = vec3(0.95, 0.87, 0.78);
   vec3 satin = vec3(0.12, 0.11, 0.105) * (0.2 + 0.95 * lit);
-  satin += champagne * (spec * 0.45 + sheen * 0.12) * (0.85 + 0.15 * fibre);
+  satin += champagne * (spec * 0.55 + sheen * 0.1) * (0.45 + 0.55 * fibre);
   satin = mix(satin, satin * vec3(1.7, 0.8, 0.45), heart * 0.75);
 
   // a crisp lit lip and a dark inner edge give each giant petal a clean silhouette
-  float lip = smoothstep(-0.018, -0.004, big.w) * smoothstep(0.0, -0.004, big.w);
+  float lip = smoothstep(-0.009, -0.003, big.w) * smoothstep(0.0, -0.002, big.w);
   vec2 outward = rotate(normalize(big.xy + 1e-5), GIANT_TURN);
   float facing = max(dot(outward, normalize(light.xy)), 0.0);
   satin += champagne * lip * (0.1 + 0.55 * facing);
-  satin *= 1.0 - smoothstep(-0.05, -0.012, big.w) * (1.0 - lip) * 0.35;
+  satin *= 1.0 - smoothstep(-0.02, -0.006, big.w) * (1.0 - lip) * 0.3;
 
   float castD = relief(bq + rotate(vec2(0.0, 0.035), -GIANT_TURN)).w;
   float occlude = 1.0 - smoothstep(-0.01, 0.09, castD);
@@ -232,7 +237,9 @@ export default function PetalField({
     };
 
     const resize = () => {
-      scale = Math.min(window.devicePixelRatio || 1, MAX_DPR) * RESOLUTION_SCALE;
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const area = canvas.clientWidth * canvas.clientHeight * dpr * dpr;
+      scale = dpr * Math.min(1, Math.sqrt(MAX_PIXELS / Math.max(area, 1)));
       const w = Math.max(1, Math.round(canvas.clientWidth * scale));
       const h = Math.max(1, Math.round(canvas.clientHeight * scale));
       if (canvas.width !== w || canvas.height !== h) {
