@@ -108,6 +108,21 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "device-mockups",
+      "type": "registry:ui",
+      "title": "Device Mockups",
+      "description": "Phone, laptop, tablet and browser frames for showing off a design.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/device-mockups.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

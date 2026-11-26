@@ -21,7 +21,8 @@ export type ComponentCategory =
   | "navigation"
   | "inputs"
   | "feedback"
-  | "display";
+  | "display"
+  | "mockups";
 
 export const CATEGORY_LABELS: Record<ComponentCategory, string> = {
   ai: "AI kit",
@@ -29,6 +30,7 @@ export const CATEGORY_LABELS: Record<ComponentCategory, string> = {
   inputs: "Inputs",
   feedback: "Feedback",
   display: "Display",
+  mockups: "Mockups",
 };
 
 export const CATEGORY_ORDER: ComponentCategory[] = [
@@ -37,6 +39,7 @@ export const CATEGORY_ORDER: ComponentCategory[] = [
   "navigation",
   "inputs",
   "feedback",
+  "mockups",
 ];
 
 export type ComponentItem = {
@@ -75,6 +78,162 @@ export const PANEL_INFO = {
 } as const;
 
 export const components: ComponentItem[] = [
+  {
+    name: "Phone",
+    href: "/components/phone",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A phone frame with a metal edge, an island and a status bar.",
+    dependencies: [],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "finish",
+        type: '"silver" | "graphite" | "sand"',
+        default: '"silver"',
+        description: "The metal of the frame.",
+      },
+      {
+        name: "statusBar",
+        type: "boolean",
+        default: "false",
+        description: "Shows the time, signal and battery at the top.",
+      },
+      {
+        name: "statusBarTone",
+        type: '"dark" | "light"',
+        default: '"dark"',
+        description: "Dark text for light screens, light text for dark ones.",
+      },
+      {
+        name: "time",
+        type: "string",
+        default: '"9:41"',
+        description: "The time in the status bar.",
+      },
+    ],
+    usage: `import { Phone } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <Phone className="w-[280px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </Phone>
+  );
+}`,
+  },
+  {
+    name: "Laptop",
+    href: "/components/laptop",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A laptop frame with a thin bezel, a camera notch and an aluminium base.",
+    dependencies: [],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "notch",
+        type: "boolean",
+        default: "true",
+        description: "Shows the camera notch at the top of the screen.",
+      },
+    ],
+    usage: `import { Laptop } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <Laptop className="w-[640px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </Laptop>
+  );
+}`,
+  },
+  {
+    name: "Tablet",
+    href: "/components/tablet",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A tablet frame with even bezels, in landscape or portrait.",
+    dependencies: [],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "finish",
+        type: '"silver" | "graphite" | "sand"',
+        default: '"silver"',
+        description: "The metal of the frame.",
+      },
+      {
+        name: "orientation",
+        type: '"landscape" | "portrait"',
+        default: '"landscape"',
+        description: "Which way the tablet is turned.",
+      },
+    ],
+    usage: `import { Tablet } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <Tablet orientation="portrait" className="w-[380px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </Tablet>
+  );
+}`,
+  },
+  {
+    name: "Browser Window",
+    href: "/components/browserwindow",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A browser window with a toolbar and address bar, for web designs.",
+    dependencies: [],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "url",
+        type: "string",
+        default: '"rareui.com"',
+        description: "The address shown in the toolbar.",
+      },
+    ],
+    usage: `import { BrowserWindow } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <BrowserWindow url="acme.com" className="w-[720px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </BrowserWindow>
+  );
+}`,
+  },
   {
     name: "Attachment Tray",
     href: "/components/attachmenttray",

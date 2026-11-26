@@ -3,12 +3,20 @@
 import { Mail, Music2, PenTool } from "lucide-react";
 import AttachmentTray from "@/components/pro/attachment-tray";
 import ChipWheel from "@/components/pro/chip-wheel";
+import { Phone } from "@/components/pro/device-mockups";
 import Folder from "@/components/pro/folder";
 import NotificationMenu from "@/components/pro/notification-menu";
 import Receipt from "@/components/pro/receipt";
 
 // components without a recorded video render a small live version in their card
 const PREVIEWS: Record<string, React.ReactNode> = {
+  "device-mockups": (
+    <div className="flex size-full items-end justify-center overflow-hidden bg-white pt-6 dark:bg-[#1A1A1A]">
+      <Phone className="w-[46%] translate-y-[38%]" statusBar={false}>
+        <div className="size-full bg-[#F5F5F7]" />
+      </Phone>
+    </div>
+  ),
   "attachment-tray": (
     <div className="flex size-full items-center justify-center bg-white px-6 dark:bg-[#1A1A1A]">
       <AttachmentTray>
