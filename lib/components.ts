@@ -74,7 +74,58 @@ export const PANEL_INFO = {
   ],
 } as const;
 
-export const components: ComponentItem[] = [];
+export const components: ComponentItem[] = [
+  {
+    name: "Light Beam Card",
+    href: "/components/lightbeamcard",
+    category: "display",
+    registry: "light-beam-card",
+    isNew: true,
+    featured: true,
+    description:
+      "A card lit by a warm beam of light that pours in from one corner.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "A soft beam of light rises from the bottom corner, cut by fine strands. Move the pointer across the card and the beam sways to follow it, then settles back when the pointer leaves.",
+    props: [
+      {
+        name: "color",
+        type: "string",
+        default: '"#FC4C01"',
+        control: "swatch",
+        options: ["#FC4C01", "#3B82F6", "#22C55E", "#A855F7"],
+        optionColors: {
+          "#FC4C01": "#FC4C01",
+          "#3B82F6": "#3B82F6",
+          "#22C55E": "#22C55E",
+          "#A855F7": "#A855F7",
+        },
+        description: "The colour of the beam. Any CSS colour works.",
+      },
+      {
+        name: "strands",
+        type: "boolean",
+        default: "true",
+        description: "Draws the fine hairlines that run along the beam.",
+      },
+      {
+        name: "intensity",
+        type: "number",
+        default: "1",
+        description: "How strong the light is, from 0 to 1.",
+      },
+    ],
+    usage: `import LightBeamCard from "@/components/ui/light-beam-card";
+
+export default function Pricing() {
+  return (
+    <LightBeamCard className="max-w-sm">
+      <p className="text-6xl font-bold">$199</p>
+    </LightBeamCard>
+  );
+}`,
+  },
+];
 
 export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
 

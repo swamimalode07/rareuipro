@@ -1,9 +1,10 @@
 import { components } from "@/lib/components";
+import { fillForLayout } from "@/lib/gallery";
 import ComponentCard from "./gallery/ComponentCard";
 import ViewAllCard from "./gallery/ViewAllCard";
 
 export default function ComponentsShowcase() {
-  const [hero, ...rest] = components.filter((item) => item.featured);
+  const [hero, ...rest] = fillForLayout(components.filter((item) => item.featured), 5);
   if (!hero) return null;
 
   return (
@@ -25,8 +26,8 @@ export default function ComponentsShowcase() {
           autoPlay
           className="sm:col-span-2 lg:row-span-2"
         />
-        {rest.map((item) => (
-          <ComponentCard key={item.href} item={item} autoPlay />
+        {rest.map((item, i) => (
+          <ComponentCard key={`${item.href}-${i}`} item={item} autoPlay />
         ))}
         <ViewAllCard
           count={components.length}

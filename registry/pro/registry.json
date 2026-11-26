@@ -2,5 +2,40 @@
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "rare-ui-pro",
   "homepage": "https://rareui.com",
-  "items": []
+  "items": [
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Utils",
+      "description": "The cn helper for merging Tailwind classes.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "light-beam-card",
+      "type": "registry:ui",
+      "title": "Light Beam Card",
+      "description": "A card lit by a warm beam of light that pours in from one corner.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/light-beam-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
 }

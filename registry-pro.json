@@ -18,6 +18,24 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "light-beam-card",
+      "type": "registry:ui",
+      "title": "Light Beam Card",
+      "description": "A card lit by a warm beam of light that pours in from one corner.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/light-beam-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
