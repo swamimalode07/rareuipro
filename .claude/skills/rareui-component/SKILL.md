@@ -41,3 +41,4 @@ Add each correction or approved pattern here as a one-line rule, so the next com
 - Keep moving parts on one shared axis so the motion reads symmetric.
 - Take the mechanic from a reference, not its look: swap brand logos, gold or themed materials for neutral Rare UI ones so it never reads as a copy.
 - Physical objects need stacked shadows that follow one light from above: each layer casts onto the one beneath it (cap on paper, paper on body, everything on the surface), plus a contact shadow where things touch or lift.
+- UI surfaces (buttons, menus, cards) use tight shadows, not big blurs: light is a 1px ring at 4% black plus a faint 1-2px drop; dark is a surface a step lighter than the page, a faint inset top highlight and a crisp dark outer ring.

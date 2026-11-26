@@ -72,6 +72,24 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "notification-menu",
+      "type": "registry:ui",
+      "title": "Notification Menu",
+      "description": "A bell with an unread count that opens a list of notifications.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/notification-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

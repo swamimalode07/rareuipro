@@ -76,6 +76,67 @@ export const PANEL_INFO = {
 
 export const components: ComponentItem[] = [
   {
+    name: "Notification Menu",
+    href: "/components/notificationmenu",
+    category: "feedback",
+    registry: "notification-menu",
+    isNew: true,
+    featured: true,
+    description: "A bell with an unread count that opens a list of notifications.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "The badge shows how many notifications are unread, and the bell swings when a new one arrives. Click the bell and the list grows out of it. Click a notification to mark it read, or mark them all at once, and the count rolls down. Click outside or press Escape and it folds back into the bell.",
+    props: [
+      {
+        name: "notifications",
+        type: "{ id: string; title: string; body?: string; time: string; read?: boolean; avatar?: ReactNode }[]",
+        required: true,
+        description: "The list to show. Add a new item and the bell swings. Without an avatar, the initials of the title are used.",
+      },
+      {
+        name: "heading",
+        type: "string",
+        default: '"Notifications"',
+        description: "The title at the top of the list.",
+      },
+      {
+        name: "emptyText",
+        type: "string",
+        default: '"You\'re all caught up."',
+        description: "Shown when there are no notifications.",
+      },
+      {
+        name: "align",
+        type: '"start" | "center" | "end"',
+        default: '"center"',
+        description: "Where the list sits under the bell. Centered by default.",
+      },
+      {
+        name: "onRead",
+        type: "(id: string) => void",
+        description: "Called when a notification is marked read.",
+      },
+      {
+        name: "onReadAll",
+        type: "() => void",
+        description: "Called when every notification is marked read.",
+      },
+    ],
+    usage: `import NotificationMenu from "@/components/ui/notification-menu";
+
+export default function Header() {
+  return (
+    <NotificationMenu
+      notifications={[
+        { id: "1", title: "Maya Chen", body: "Left a comment on Pricing.", time: "2m" },
+        { id: "2", title: "Deploy finished", body: "main is live.", time: "18m", read: true },
+      ]}
+      onRead={(id) => console.log("read", id)}
+    />
+  );
+}`,
+  },
+  {
     name: "Receipt",
     href: "/components/receipt",
     category: "display",

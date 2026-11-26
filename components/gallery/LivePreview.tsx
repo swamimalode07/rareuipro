@@ -3,10 +3,22 @@
 import { Mail, Music2, PenTool } from "lucide-react";
 import ChipWheel from "@/components/pro/chip-wheel";
 import Folder from "@/components/pro/folder";
+import NotificationMenu from "@/components/pro/notification-menu";
 import Receipt from "@/components/pro/receipt";
 
 // components without a recorded video render a small live version in their card
 const PREVIEWS: Record<string, React.ReactNode> = {
+  "notification-menu": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <NotificationMenu
+        notifications={[
+          { id: "1", title: "Maya Chen", time: "2m" },
+          { id: "2", title: "Deploy finished", time: "18m" },
+          { id: "3", title: "Jonas Weber", time: "1h" },
+        ]}
+      />
+    </div>
+  ),
   receipt: (
     <div className="flex size-full items-start justify-center overflow-hidden bg-white pt-5 dark:bg-[#1A1A1A]">
       <Receipt
