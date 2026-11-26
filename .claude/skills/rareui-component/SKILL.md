@@ -30,3 +30,9 @@ One short line per file touched, then anything the user must decide.
 ## Learned from Swami
 
 Add each correction or approved pattern here as a one-line rule, so the next component gets it right first time.
+
+- Squircles must work in every browser. `corner-shape: squircle` is Chrome only; draw shapes as SVG paths with squircle corners (see `squircle()` in `components/pro/folder.tsx`), or use `@squircle-js/react`.
+- Docs demos show one instance of the component, not a row of variants.
+- Match the reference closely: shape, depth, inner glow and shadow. Ask before dropping details.
+- Surfaces get depth: a 1px border a shade darker, a soft inner rim lighter than the fill, and a neutral shadow (tinted shadows read as glow on dark).
+- Keep the demo content plain; no decorative glyphs or letters on the component unless asked.

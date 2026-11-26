@@ -125,6 +125,86 @@ export default function Pricing() {
   );
 }`,
   },
+  {
+    name: "Folder",
+    href: "/components/folder",
+    category: "display",
+    registry: "folder",
+    isNew: true,
+    featured: true,
+    description: "A soft folder with a few cards peeking out of the top.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Hover the folder and the front flap folds forward while the cards rise and fan out, one after another from the middle. The folder tilts gently toward your pointer and presses in when clicked. Move away and the cards tuck back in from the edges. On touch screens, tap to open and tap again to close.",
+    props: [
+      {
+        name: "color",
+        type: "string",
+        default: '"#8C9BFF"',
+        control: "swatch",
+        options: ["#8C9BFF", "#F2F2F4", "#FFD25E", "#F5A3C7", "#7FD1AE"],
+        optionColors: {
+          "#8C9BFF": "#8C9BFF",
+          "#F2F2F4": "#F2F2F4",
+          "#FFD25E": "#FFD25E",
+          "#F5A3C7": "#F5A3C7",
+          "#7FD1AE": "#7FD1AE",
+        },
+        description: "The colour of the folder. The back panel is drawn a shade darker.",
+      },
+      {
+        name: "items",
+        type: "ReactNode[]",
+        description: "What goes inside each card. Every item gets a white squircle frame. Three or four look best.",
+      },
+      {
+        name: "label",
+        type: "string",
+        description: "The name shown under the folder.",
+      },
+      {
+        name: "caption",
+        type: "string",
+        description: "A second line under the label.",
+      },
+      {
+        name: "count",
+        type: "number",
+        description: "Shows a number in a pill on the front of the folder.",
+      },
+      {
+        name: "countLabel",
+        type: "string",
+        description: "A word after the number that says what it counts, like fonts.",
+      },
+      {
+        name: "open",
+        type: "boolean",
+        description: "Holds the folder open or closed. Leave it unset to open on hover.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "Content drawn on the front flap.",
+      },
+    ],
+    usage: `import Folder from "@/components/ui/folder";
+
+export default function Library() {
+  return (
+    <Folder
+      label="Fonts"
+      count={136}
+      countLabel="fonts"
+      items={[
+        <div key="a" className="size-full bg-amber-300" />,
+        <div key="b" className="size-full bg-rose-400" />,
+        <div key="c" className="size-full bg-pink-300" />,
+      ]}
+    />
+  );
+}`,
+  },
 ];
 
 export type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
