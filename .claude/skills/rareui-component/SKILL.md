@@ -17,7 +17,7 @@ Run the `rareui-design` skill first for the look. This skill covers the build an
    - Animation with `motion/react`. Only add a dependency the user approved.
    - Export both named and default.
 2. **Demo**: `app/components/(docs)/<slug>/demo.tsx`, the component centred in `flex h-full items-center justify-center p-6`, with real-looking content.
-3. **Page**: `app/components/(docs)/<slug>/page.tsx`, copy `lightbeamcard/page.tsx` and change `HREF`. The slug is the name lowercased, no dashes (`lightbeamcard`).
+3. **Page**: `app/components/(docs)/<slug>/page.tsx`, copy `folder/page.tsx` and change `HREF`. The slug is the name lowercased, no dashes (`colorpicker`).
 4. **Entry**: add to `components` in `lib/components.ts`: `name`, `href`, `category`, `registry`, `isNew: true`, `description`, `dependencies`, `interaction`, `props`, `usage`. Follow `CONVENTIONS.md` copy rules exactly. Every number must match the code.
 5. **Card preview**: no video yet? Add a small live version to `PREVIEWS` in `components/gallery/LivePreview.tsx`, keyed by the registry name.
 6. **Registry**: add an item to `registry-pro.json` (path `components/pro/<kebab-name>.tsx`, `registryDependencies: ["utils"]` if it uses `cn`). The description matches `lib/components.ts` word for word. Then run `npm run registry:build`, which writes `registry/pro/*.json`.
