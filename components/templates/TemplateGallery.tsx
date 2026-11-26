@@ -12,8 +12,20 @@ export default function TemplateGallery() {
   const [filter, setFilter] = useState<Filter>("All");
   const reduceMotion = useReducedMotion();
 
-  const filters: Filter[] = ["All", ...TEMPLATE_CATEGORIES];
+  if (templates.length === 0) {
+    return (
+      <p className="mt-16 text-center font-runde text-sm font-medium text-muted-foreground">
+        The first templates are on the way.
+      </p>
+    );
+  }
+
+  const filters: Filter[] = [
+    "All",
+    ...TEMPLATE_CATEGORIES.filter((c) => templates.some((t) => t.category === c)),
+  ];
   const shown = filter === "All" ? templates : templates.filter((t) => t.category === filter);
+
   return (
     <div className="mt-12 flex flex-col gap-8">
       <div

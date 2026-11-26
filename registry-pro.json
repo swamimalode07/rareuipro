@@ -36,6 +36,24 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "folder",
+      "type": "registry:ui",
+      "title": "Folder",
+      "description": "A soft folder with a few cards peeking out of the top.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/folder.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }
