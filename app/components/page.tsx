@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import ComponentCard from "@/components/gallery/ComponentCard";
 import GooeyNavbar from "@/components/GooeyNavbar";
 import { components, gallerySections } from "@/lib/components";
-import { fillForLayout } from "@/lib/gallery";
 import { SITE_KEYWORDS, componentsJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -59,8 +58,8 @@ export default function ComponentsIndexPage() {
             </h2>
 
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {fillForLayout(section.items, 6).map((item, i) => (
-                <ComponentCard key={`${item.href}-${i}`} item={item} />
+              {section.items.map((item) => (
+                <ComponentCard key={item.href} item={item} />
               ))}
             </div>
           </section>
