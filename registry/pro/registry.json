@@ -54,6 +54,24 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "receipt",
+      "type": "registry:ui",
+      "title": "Receipt",
+      "description": "A paper receipt that prints out of a small printer, line by line.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/receipt.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

@@ -76,6 +76,132 @@ export const PANEL_INFO = {
 
 export const components: ComponentItem[] = [
   {
+    name: "Receipt",
+    href: "/components/receipt",
+    category: "display",
+    registry: "receipt",
+    isNew: true,
+    featured: true,
+    description: "A paper receipt that prints out of a small printer, line by line.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "When the receipt scrolls into view it feeds out of the slot in short pulses, like a real thermal printer, while the light on the printer glows. Press the button on the printer to print it again.",
+    props: [
+      {
+        name: "items",
+        type: "{ label: string; price: number; qty?: number; note?: string }[]",
+        required: true,
+        description: "The lines on the receipt. Subtotal, tax and total are worked out from these.",
+      },
+      {
+        name: "merchant",
+        type: "{ name: string; address?: string; logo?: ReactNode }",
+        description: "The header at the top of the paper.",
+      },
+      {
+        name: "title",
+        type: "string",
+        default: '"Payment successful"',
+        description: "The small heading above the total.",
+      },
+      {
+        name: "meta",
+        type: "string[]",
+        description: "Short lines under the total, like the date and card.",
+      },
+      {
+        name: "adjustments",
+        type: "{ label: string; amount: number }[]",
+        description: "Extra lines added before tax, like a discount (negative) or a tip.",
+      },
+      {
+        name: "tax",
+        type: "{ label?: string; rate: number }",
+        description: "The tax line. A rate of 0.05 is 5%. Leave it out for no tax.",
+      },
+      {
+        name: "currency",
+        type: "string",
+        default: '"USD"',
+        description: "The ISO currency code used to format every amount.",
+      },
+      {
+        name: "locale",
+        type: "string",
+        default: '"en-US"',
+        description: "The locale used to format amounts.",
+      },
+      {
+        name: "formatAmount",
+        type: "(value: number) => string",
+        description: "Your own amount formatter. Overrides currency and locale.",
+      },
+      {
+        name: "stamp",
+        type: "string",
+        default: '"Paid"',
+        description: "The word in the round stamp. Pass an empty string to hide it.",
+      },
+      {
+        name: "footer",
+        type: "string",
+        default: '"Thank you"',
+        description: "The note at the bottom of the paper.",
+      },
+      {
+        name: "barcode",
+        type: "string",
+        description: "Draws a barcode with this value under the footer.",
+      },
+      {
+        name: "paperColor",
+        type: "string",
+        default: '"#FAF9F6"',
+        description: "The colour of the paper.",
+      },
+      {
+        name: "inkColor",
+        type: "string",
+        default: '"#262522"',
+        description: "The colour of the printed text.",
+      },
+      {
+        name: "duration",
+        type: "number",
+        default: "2.4",
+        description: "How long the print takes, in seconds.",
+      },
+      {
+        name: "printer",
+        type: "boolean",
+        default: "true",
+        description: "Shows the printer. Without it the receipt renders as plain paper.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "Extra content printed under the total.",
+      },
+    ],
+    usage: `import Receipt from "@/components/ui/receipt";
+
+export default function Checkout() {
+  return (
+    <Receipt
+      merchant={{ name: "Corner Café" }}
+      meta={["27 Nov 2026", "Card ···· 4242"]}
+      items={[
+        { label: "Flat white", price: 4.5, qty: 2 },
+        { label: "Banana bread", price: 3.25 },
+      ]}
+      tax={{ label: "VAT", rate: 0.05 }}
+      currency="GBP"
+      locale="en-GB"
+    />
+  );
+}`,
+  },
+  {
     name: "Chip Wheel",
     href: "/components/chipwheel",
     category: "display",

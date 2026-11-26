@@ -39,3 +39,5 @@ Add each correction or approved pattern here as a one-line rule, so the next com
 - Default to simple and clean: flat fills, no borders, inset highlights, glows or backdrop blur unless the reference clearly has them.
 - Animated pieces must never cause layout shift: reserve the largest size in CSS (e.g. a hidden grid stack) instead of animating width.
 - Keep moving parts on one shared axis so the motion reads symmetric.
+- Take the mechanic from a reference, not its look: swap brand logos, gold or themed materials for neutral Rare UI ones so it never reads as a copy.
+- Physical objects need stacked shadows that follow one light from above: each layer casts onto the one beneath it (cap on paper, paper on body, everything on the surface), plus a contact shadow where things touch or lift.

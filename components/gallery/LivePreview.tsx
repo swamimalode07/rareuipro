@@ -3,9 +3,22 @@
 import { Mail, Music2, PenTool } from "lucide-react";
 import ChipWheel from "@/components/pro/chip-wheel";
 import Folder from "@/components/pro/folder";
+import Receipt from "@/components/pro/receipt";
 
 // components without a recorded video render a small live version in their card
 const PREVIEWS: Record<string, React.ReactNode> = {
+  receipt: (
+    <div className="flex size-full items-start justify-center overflow-hidden bg-white pt-5 dark:bg-[#1A1A1A]">
+      <Receipt
+        className="w-56 origin-top scale-90"
+        stamp=""
+        items={[
+          { label: "Flat white", price: 4.5, qty: 2 },
+          { label: "Banana bread", price: 3.25 },
+        ]}
+      />
+    </div>
+  ),
   "chip-wheel": (
     <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
       <p className="flex items-center gap-[0.25em] font-runde text-2xl font-bold tracking-[-0.03em]">
