@@ -1,6 +1,15 @@
 "use client";
 
 import * as React from "react";
+import {
+  IconBookmarkOutline18,
+  IconChevronLeftOutline18,
+  IconChevronRightOutline18,
+  IconFiles2Outline18,
+  IconLockOutline18,
+  IconPlusOutline18,
+  IconRefresh2Outline18,
+} from "nucleo-ui-essential-outline-18";
 import { cn } from "@/lib/utils";
 
 type Finish = "silver" | "graphite" | "sand";
@@ -249,6 +258,7 @@ type MockupProps = React.ComponentProps<"div"> & {
   screen: Rect;
   frame: React.ReactNode;
   label: string;
+  roundTop?: boolean;
 };
 
 // the svg frame sits on top with a hole where the screen is; content underneath shows through and stays interactive
@@ -257,6 +267,7 @@ function Mockup({
   screen,
   frame,
   label,
+  roundTop = true,
   className,
   style,
   children,
@@ -277,7 +288,9 @@ function Mockup({
           top: pct(screen.y, h),
           width: pct(screen.w, w),
           height: pct(screen.h, h),
-          borderRadius: `${pct(radius, screen.w)} / ${pct(radius, screen.h)}`,
+          borderRadius: roundTop
+            ? `${pct(radius, screen.w)} / ${pct(radius, screen.h)}`
+            : `0 0 ${pct(radius, screen.w)} ${pct(radius, screen.w)} / 0 0 ${pct(radius, screen.h)} ${pct(radius, screen.h)}`,
         }}
       >
         {children}
@@ -662,9 +675,10 @@ function Tablet({
   const id = useSvgId();
   const landscape = orientation === "landscape";
   const [w, h] = landscape ? [1000, 700] : [700, 1000];
-  const outer = { x: 0, y: 0, w, h, r: 56 };
-  const bezel = { x: 8, y: 8, w: w - 16, h: h - 16, r: 48 };
-  const screen = { x: 34, y: 34, w: w - 68, h: h - 68, r: 22 };
+  // tighter corners than the phone, with a small screen radius, matching the tablet's proportions
+  const outer = { x: 0, y: 0, w, h, r: 30, l: 48, k: 0.38 };
+  const bezel = { x: 6, y: 6, w: w - 12, h: h - 12, r: 27, l: 43, k: 0.4 };
+  const screen = { x: 28, y: 28, w: w - 56, h: h - 56, r: 14, l: 24, k: 0.36 };
   return (
     <Mockup
       data-slot="tablet"
@@ -683,7 +697,7 @@ function Tablet({
           </defs>
           <MetalBand id={id} outer={outer} inner={bezel} finish={finish} />
           <Bezel id={id} outer={bezel} screen={screen} glow={10} />
-          <circle cx={w / 2} cy="21" r="4.5" fill={`url(#${id}-lens)`} />
+          <circle cx={w / 2} cy="17" r="4.5" fill={`url(#${id}-lens)`} />
         </>
       }
       {...props}
@@ -695,74 +709,194 @@ function Tablet({
 
 const BROWSER = {
   size: [1200, 760] as [number, number],
-  screen: { x: 1, y: 53, w: 1198, h: 706, r: 13 },
+  screen: { x: 0, y: 56, w: 1200, h: 704, r: 12 },
 };
+
+// colours live in css variables, so one svg follows light and dark mode
+const LIGHT_TONE =
+  "[--bw-window:#FFFFFF] [--bw-bar-top:#FBFBFC] [--bw-bar-bottom:#F3F3F5] [--bw-hairline:rgb(0_0_0/0.09)] [--bw-field:rgb(0_0_0/0.055)] [--bw-text:#1D1D1F] [--bw-icon:#6E6E73] [--bw-muted:#C4C4C9] [--bw-edge:rgb(0_0_0/0.12)] [--bw-shine:rgb(255_255_255/0.9)]";
+const DARK_TONE =
+  "[--bw-window:#1E1E20] [--bw-bar-top:#323235] [--bw-bar-bottom:#2B2B2E] [--bw-hairline:rgb(0_0_0/0.55)] [--bw-field:rgb(255_255_255/0.08)] [--bw-text:#F2F2F7] [--bw-icon:#A1A1A6] [--bw-muted:#56565B] [--bw-edge:rgb(255_255_255/0.1)] [--bw-shine:rgb(255_255_255/0.07)]";
+// written out in full so tailwind can see every class
+const AUTO_TONE = `${LIGHT_TONE} dark:[--bw-window:#1E1E20] dark:[--bw-bar-top:#323235] dark:[--bw-bar-bottom:#2B2B2E] dark:[--bw-hairline:rgb(0_0_0/0.55)] dark:[--bw-field:rgb(255_255_255/0.08)] dark:[--bw-text:#F2F2F7] dark:[--bw-icon:#A1A1A6] dark:[--bw-muted:#56565B] dark:[--bw-edge:rgb(255_255_255/0.1)] dark:[--bw-shine:rgb(255_255_255/0.07)]`;
 
 type BrowserWindowProps = React.ComponentProps<"div"> & {
   url?: string;
+  tone?: "auto" | "light" | "dark";
 };
+
+// close, minimise, zoom: fills with a faint darker rim, glazed top and bottom
+const LIGHTS = [
+  ["#FF5F57", "#E0443E"],
+  ["#FEBC2E", "#DEA123"],
+  ["#28C840", "#1AAB29"],
+];
 
 function BrowserWindow({
   url = "rareui.com",
+  tone = "auto",
   className,
   children,
   ...props
 }: BrowserWindowProps) {
   const id = useSvgId();
+  const v = (name: string) => `var(--bw-${name})`;
   return (
     <Mockup
       data-slot="browser-window"
       size={BROWSER.size}
       screen={BROWSER.screen}
       label="Browser window"
+      roundTop={false}
       className={cn(
-        "w-[720px] drop-shadow-[0_20px_30px_rgb(0_0_0/0.18)]",
+        "w-[720px] [filter:drop-shadow(0_2px_3px_rgb(0_0_0/0.08))_drop-shadow(0_22px_36px_rgb(0_0_0/0.18))]",
+        tone === "auto" ? AUTO_TONE : tone === "dark" ? DARK_TONE : LIGHT_TONE,
         className,
       )}
       frame={
         <>
           <defs>
+            <linearGradient id={`${id}-bar`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" style={{ stopColor: v("bar-top") }} />
+              <stop offset="1" style={{ stopColor: v("bar-bottom") }} />
+            </linearGradient>
+            <linearGradient id={`${id}-gloss`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#fff" stopOpacity="0.6" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            </linearGradient>
+            <radialGradient id={`${id}-glow`} cx="0.5" cy="1" r="0.6">
+              <stop offset="0" stopColor="#fff" stopOpacity="0.45" />
+              <stop offset="1" stopColor="#fff" stopOpacity="0" />
+            </radialGradient>
             <clipPath id={`${id}-window`}>
-              <path d={plainRect({ x: 0, y: 0, w: 1200, h: 760, r: 14 })} />
+              <path d={plainRect({ x: 0, y: 0, w: 1200, h: 760, r: 12 })} />
             </clipPath>
           </defs>
+
           <g clipPath={`url(#${id}-window)`}>
-            <path d={`M0 0H1200V53H0Z`} fill="#F5F5F7" />
-            <path d="M0 52.5H1200" stroke="#000000" strokeOpacity="0.08" />
+            <rect
+              x="0"
+              y="0"
+              width="1200"
+              height="56"
+              fill={`url(#${id}-bar)`}
+            />
+            <path
+              d="M0 0.75H1200"
+              strokeWidth="1.5"
+              style={{ stroke: v("shine") }}
+            />
+            <path d="M0 55.5H1200" style={{ stroke: v("hairline") }} />
           </g>
-          <path
-            d={plainRect({ x: 0.5, y: 0.5, w: 1199, h: 759, r: 13.5 })}
-            fill="none"
-            stroke="#000000"
-            strokeOpacity="0.1"
+
+          {LIGHTS.map(([fill, ring], i) => (
+            <g key={fill}>
+              <circle
+                cx={26 + i * 20}
+                cy="28"
+                r="6.25"
+                fill={fill}
+                stroke={ring}
+                strokeWidth="0.5"
+              />
+              <circle
+                cx={26 + i * 20}
+                cy="28"
+                r="6"
+                fill={`url(#${id}-glow)`}
+              />
+              <ellipse
+                cx={26 + i * 20}
+                cy="25.1"
+                rx="3.9"
+                ry="2.5"
+                fill={`url(#${id}-gloss)`}
+              />
+            </g>
+          ))}
+
+          <IconChevronLeftOutline18
+            x="94"
+            y="17"
+            width="22"
+            height="22"
+            style={{ color: v("icon") }}
           />
-          <circle cx="28" cy="26.5" r="6.5" fill="#FF5F57" />
-          <circle cx="50" cy="26.5" r="6.5" fill="#FEBC2E" />
-          <circle cx="72" cy="26.5" r="6.5" fill="#28C840" />
+          <IconChevronRightOutline18
+            x="124"
+            y="17"
+            width="22"
+            height="22"
+            style={{ color: v("muted") }}
+          />
+
           <rect
-            x="420"
+            x="400"
             y="13"
-            width="360"
-            height="27"
-            rx="8"
-            fill="#000000"
-            fillOpacity="0.05"
+            width="400"
+            height="30"
+            rx="9"
+            style={{ fill: v("field") }}
+          />
+          <IconLockOutline18
+            x="414"
+            y="20"
+            width="16"
+            height="16"
+            style={{ color: v("icon") }}
           />
           <text
-            x="600"
-            y="31"
-            textAnchor="middle"
-            fontFamily="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-            fontSize="13"
-            fill="#6E6E73"
+            x="438"
+            y="33"
+            fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif"
+            fontSize="13.5"
+            fontWeight="500"
+            style={{ fill: v("text") }}
           >
             {url}
           </text>
+          <IconRefresh2Outline18
+            x="772"
+            y="19"
+            width="18"
+            height="18"
+            style={{ color: v("icon") }}
+          />
+
+          <IconBookmarkOutline18
+            x="1088"
+            y="17"
+            width="22"
+            height="22"
+            style={{ color: v("icon") }}
+          />
+          <IconPlusOutline18
+            x="1124"
+            y="17"
+            width="22"
+            height="22"
+            style={{ color: v("icon") }}
+          />
+          <IconFiles2Outline18
+            x="1160"
+            y="17"
+            width="22"
+            height="22"
+            style={{ color: v("icon") }}
+          />
+
+          <path
+            d={plainRect({ x: 0.5, y: 0.5, w: 1199, h: 759, r: 11.5 })}
+            fill="none"
+            style={{ stroke: v("edge") }}
+          />
         </>
       }
       {...props}
     >
-      {children}
+      <div className="size-full" style={{ background: v("window") }}>
+        {children}
+      </div>
     </Mockup>
   );
 }

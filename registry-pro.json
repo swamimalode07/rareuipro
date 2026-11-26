@@ -122,6 +122,9 @@
           "path": "components/pro/device-mockups.tsx",
           "type": "registry:ui"
         }
+      ],
+      "dependencies": [
+        "nucleo-ui-essential-outline-18"
       ]
     }
   ]

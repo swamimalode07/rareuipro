@@ -208,7 +208,7 @@ export default function Showcase() {
     registry: "device-mockups",
     isNew: true,
     description: "A browser window with a toolbar and address bar, for web designs.",
-    dependencies: [],
+    dependencies: [{ name: "nucleo-ui-essential-outline-18" }],
     interaction:
       "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
     props: [
@@ -222,6 +222,12 @@ export default function Showcase() {
         type: "string",
         default: '"rareui.com"',
         description: "The address shown in the toolbar.",
+      },
+      {
+        name: "tone",
+        type: '"auto" | "light" | "dark"',
+        default: '"auto"',
+        description: "A light or dark window. Auto follows the page's dark mode.",
       },
     ],
     usage: `import { BrowserWindow } from "@/components/ui/device-mockups";
