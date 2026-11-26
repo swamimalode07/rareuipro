@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Music2, PenTool } from "lucide-react";
+import AttachmentTray from "@/components/pro/attachment-tray";
 import ChipWheel from "@/components/pro/chip-wheel";
 import Folder from "@/components/pro/folder";
 import NotificationMenu from "@/components/pro/notification-menu";
@@ -8,6 +9,13 @@ import Receipt from "@/components/pro/receipt";
 
 // components without a recorded video render a small live version in their card
 const PREVIEWS: Record<string, React.ReactNode> = {
+  "attachment-tray": (
+    <div className="flex size-full items-center justify-center bg-white px-6 dark:bg-[#1A1A1A]">
+      <AttachmentTray>
+        <p className="px-5 pb-1 pt-4 text-[15px] text-neutral-400">Ask anything, or drop a file here</p>
+      </AttachmentTray>
+    </div>
+  ),
   "notification-menu": (
     <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
       <NotificationMenu

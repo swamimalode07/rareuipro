@@ -90,6 +90,24 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "attachment-tray",
+      "type": "registry:ui",
+      "title": "Attachment Tray",
+      "description": "A prompt box that takes files, with thumbnails and upload progress.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/attachment-tray.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

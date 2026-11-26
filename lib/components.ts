@@ -76,6 +76,78 @@ export const PANEL_INFO = {
 
 export const components: ComponentItem[] = [
   {
+    name: "Attachment Tray",
+    href: "/components/attachmenttray",
+    category: "ai",
+    registry: "attachment-tray",
+    isNew: true,
+    featured: true,
+    description: "A prompt box that takes files, with thumbnails and upload progress.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Drop files anywhere on the box, paste them, or click the paperclip. Images sharpen into focus as they upload, and other files fill up as a soft bar. Remove one and the rest slide over; press Backspace in an empty input to remove the last. Duplicates are skipped, and files that are too big, empty or the wrong type say why. A failed upload can be retried.",
+    props: [
+      {
+        name: "onUpload",
+        type: "(file: File, report: (progress: number) => void, signal: AbortSignal) => Promise<void>",
+        description: "Uploads one file. Call report with a number from 0 to 1 to move its progress, and reject to mark it failed. The signal aborts if the file is removed mid-upload.",
+      },
+      {
+        name: "onFilesChange",
+        type: "(files: File[]) => void",
+        description: "Called with the current files whenever one is added or removed.",
+      },
+      {
+        name: "accept",
+        type: "string",
+        description: "The file types the picker allows, like image/*,.pdf.",
+      },
+      {
+        name: "maxFiles",
+        type: "number",
+        default: "10",
+        description: "How many files can be attached. Extra ones show as an error.",
+      },
+      {
+        name: "maxSize",
+        type: "number",
+        default: "20971520",
+        description: "The largest file allowed, in bytes. The default is 20 MB.",
+      },
+      {
+        name: "actions",
+        type: "ReactNode",
+        description: "Shown on the right of the bottom row, like a send button.",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: "false",
+        description: "Stops files from being added.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "The input that sits under the files, usually a textarea.",
+      },
+    ],
+    usage: `import AttachmentTray from "@/components/ui/attachment-tray";
+
+export default function Composer() {
+  return (
+    <AttachmentTray
+      onUpload={async (file, report, signal) => {
+        // upload the file with fetch(url, { signal }), calling report(0.5) and so on as it goes
+        report(1);
+      }}
+      actions={<button>Send</button>}
+    >
+      <textarea placeholder="Ask anything" className="w-full resize-none bg-transparent px-5 pt-4 outline-none" />
+    </AttachmentTray>
+  );
+}`,
+  },
+  {
     name: "Notification Menu",
     href: "/components/notificationmenu",
     category: "feedback",
