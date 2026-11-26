@@ -110,6 +110,24 @@
       ]
     },
     {
+      "name": "voice-orb",
+      "type": "registry:ui",
+      "title": "Voice Orb",
+      "description": "A round voice button for talking to an assistant.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/voice-orb.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "device-mockups",
       "type": "registry:ui",
       "title": "Device Mockups",

@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Mail, Music2, PenTool } from "lucide-react";
 import AttachmentTray from "@/components/pro/attachment-tray";
 import ChipWheel from "@/components/pro/chip-wheel";
@@ -7,6 +8,22 @@ import { Phone } from "@/components/pro/device-mockups";
 import Folder from "@/components/pro/folder";
 import NotificationMenu from "@/components/pro/notification-menu";
 import Receipt from "@/components/pro/receipt";
+import VoiceOrb from "@/components/pro/voice-orb";
+
+function VoiceOrbPreview() {
+  const [level, setLevel] = React.useState(0);
+  React.useEffect(() => {
+    let frame = 0;
+    const tick = (now: number) => {
+      const t = now / 1000;
+      setLevel(0.25 + Math.abs(Math.sin(t * 6.1) * Math.sin(t * 1.7)) * 0.7);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+  return <VoiceOrb state="listening" level={level} tabIndex={-1} />;
+}
 
 // components without a recorded video render a small live version in their card
 const PREVIEWS: Record<string, React.ReactNode> = {
@@ -22,6 +39,11 @@ const PREVIEWS: Record<string, React.ReactNode> = {
       <AttachmentTray>
         <p className="px-5 pb-1 pt-4 text-[15px] text-neutral-400">Ask anything, or drop a file here</p>
       </AttachmentTray>
+    </div>
+  ),
+  "voice-orb": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <VoiceOrbPreview />
     </div>
   ),
   "notification-menu": (

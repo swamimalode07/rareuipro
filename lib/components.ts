@@ -313,6 +313,70 @@ export default function Composer() {
 }`,
   },
   {
+    name: "Voice Orb",
+    href: "/components/voiceorb",
+    category: "ai",
+    registry: "voice-orb",
+    isNew: true,
+    description: "A round voice button for talking to an assistant.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Tap the orb to start talking. Bands of light drift slowly around it at rest. While you speak, the edge brightens and the bands ripple with your voice. When the assistant replies, light grows from the centre with its voice and the orb turns the other way. Tap during the reply to cut in.",
+    props: [
+      {
+        name: "state",
+        type: '"idle" | "listening" | "speaking"',
+        default: '"idle"',
+        description: "What the orb is doing: resting, listening to you, or speaking a reply.",
+      },
+      {
+        name: "colors",
+        type: "[string, string, string]",
+        default: '["#F59BFF", "#B05CFF", "#7F8CFF"]',
+        description: "Three hex colours the light blends between around the orb.",
+      },
+      {
+        name: "level",
+        type: "number",
+        default: "0",
+        description: "How loud the current voice is, from 0 to 1. Pass the mic level while listening and the reply level while speaking.",
+      },
+      {
+        name: "onStart",
+        type: "() => void",
+        description: "Called when the orb is tapped while idle.",
+      },
+      {
+        name: "onStop",
+        type: "() => void",
+        description: "Called when the orb is tapped while listening.",
+      },
+      {
+        name: "onInterrupt",
+        type: "() => void",
+        description: "Called when the orb is tapped while speaking.",
+      },
+    ],
+    usage: `import { useState } from "react";
+import VoiceOrb, { useMicLevel } from "@/components/ui/voice-orb";
+
+export default function Assistant() {
+  const [state, setState] = useState<"idle" | "listening" | "speaking">("idle");
+  // returns 0 to 1 from the microphone while listening
+  const mic = useMicLevel(state === "listening");
+
+  return (
+    <VoiceOrb
+      state={state}
+      level={mic}
+      onStart={() => setState("listening")}
+      onStop={() => setState("speaking")}
+      onInterrupt={() => setState("listening")}
+    />
+  );
+}`,
+  },
+  {
     name: "Notification Menu",
     href: "/components/notificationmenu",
     category: "feedback",
