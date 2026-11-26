@@ -36,3 +36,6 @@ Add each correction or approved pattern here as a one-line rule, so the next com
 - Match the reference closely: shape, depth, inner glow and shadow. Ask before dropping details.
 - Surfaces get depth: a 1px border a shade darker, a soft inner rim lighter than the fill, and a neutral shadow (tinted shadows read as glow on dark).
 - Keep the demo content plain; no decorative glyphs or letters on the component unless asked.
+- Default to simple and clean: flat fills, no borders, inset highlights, glows or backdrop blur unless the reference clearly has them.
+- Animated pieces must never cause layout shift: reserve the largest size in CSS (e.g. a hidden grid stack) instead of animating width.
+- Keep moving parts on one shared axis so the motion reads symmetric.

@@ -36,6 +36,24 @@
           "type": "registry:ui"
         }
       ]
+    },
+    {
+      "name": "chip-wheel",
+      "type": "registry:ui",
+      "title": "Chip Wheel",
+      "description": "A rolling wheel of pills that sits inside a line of text.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/chip-wheel.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

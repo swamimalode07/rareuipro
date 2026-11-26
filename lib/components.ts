@@ -76,6 +76,54 @@ export const PANEL_INFO = {
 
 export const components: ComponentItem[] = [
   {
+    name: "Chip Wheel",
+    href: "/components/chipwheel",
+    category: "display",
+    registry: "chip-wheel",
+    isNew: true,
+    featured: true,
+    description: "A rolling wheel of pills that sits inside a line of text.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Pills roll up one at a time like a picker wheel. The one in the middle faces you, and the ones above and below tip back and fade into the background. The text beside it stays still. Hover to pause.",
+    props: [
+      {
+        name: "items",
+        type: "{ label: string; icon?: ReactNode; color?: string }[]",
+        required: true,
+        description: "The pills to cycle through. The color tints the label and fills the icon circle.",
+      },
+      {
+        name: "interval",
+        type: "number",
+        default: "2200",
+        description: "Time each pill stays in the middle, in milliseconds.",
+      },
+      {
+        name: "paused",
+        type: "boolean",
+        default: "false",
+        description: "Stops the wheel on the current pill.",
+      },
+    ],
+    usage: `import ChipWheel from "@/components/ui/chip-wheel";
+import { Mail, Music2 } from "lucide-react";
+
+export default function Headline() {
+  return (
+    <h2 className="flex items-center gap-2 text-5xl font-bold">
+      <ChipWheel
+        items={[
+          { label: "Music", icon: <Music2 />, color: "#1FAF5A" },
+          { label: "Mail", icon: <Mail />, color: "#2F80ED" },
+        ]}
+      />
+      in one place
+    </h2>
+  );
+}`,
+  },
+  {
     name: "Folder",
     href: "/components/folder",
     category: "display",

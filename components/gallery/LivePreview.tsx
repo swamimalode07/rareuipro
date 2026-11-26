@@ -1,9 +1,25 @@
 "use client";
 
+import { Mail, Music2, PenTool } from "lucide-react";
+import ChipWheel from "@/components/pro/chip-wheel";
 import Folder from "@/components/pro/folder";
 
 // components without a recorded video render a small live version in their card
 const PREVIEWS: Record<string, React.ReactNode> = {
+  "chip-wheel": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <p className="flex items-center gap-[0.25em] font-runde text-2xl font-bold tracking-[-0.03em]">
+        <ChipWheel
+          items={[
+            { label: "Music", icon: <Music2 strokeWidth={2.5} />, color: "#1FAF5A" },
+            { label: "Sketch", icon: <PenTool strokeWidth={2.5} />, color: "#F07A2B" },
+            { label: "Mail", icon: <Mail strokeWidth={2.5} />, color: "#2F80ED" },
+          ]}
+        />
+        in one place
+      </p>
+    </div>
+  ),
   folder: (
     <div className="flex size-full items-center justify-center bg-white pt-6 dark:bg-[#1A1A1A]">
       <Folder
