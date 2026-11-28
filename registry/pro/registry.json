@@ -128,6 +128,60 @@
       ]
     },
     {
+      "name": "image-generation",
+      "type": "registry:ui",
+      "title": "Image Generation",
+      "description": "A placeholder for an AI image that turns the prompt into the picture.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/image-generation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "instant-photo",
+      "type": "registry:ui",
+      "title": "Instant Photo",
+      "description": "An AI image placeholder that ejects and develops like an instant photo.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/instant-photo.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tile-reveal",
+      "type": "registry:ui",
+      "title": "Tile Reveal",
+      "description": "An AI image placeholder made of tiles that flip over to show the picture.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/tile-reveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "device-mockups",
       "type": "registry:ui",
       "title": "Device Mockups",

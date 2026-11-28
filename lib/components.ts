@@ -377,6 +377,150 @@ export default function Assistant() {
 }`,
   },
   {
+    name: "Image Generation",
+    href: "/components/imagegeneration",
+    category: "ai",
+    registry: "image-generation",
+    isNew: true,
+    description: "A placeholder for an AI image that turns the prompt into the picture.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "The prompt fades in, then each word breaks into fine dust that drifts while the image generates. When the image is ready, the dust flies into place, takes on its colours, and the picture sharpens in underneath.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "The text shown first and turned into dust.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. The dust keeps drifting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import ImageGeneration from "@/components/ui/image-generation";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <ImageGeneration prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "Instant Photo",
+    href: "/components/instantphoto",
+    category: "ai",
+    registry: "instant-photo",
+    isNew: true,
+    description: "An AI image placeholder that ejects and develops like an instant photo.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "A blank print slides out of the slot in short bursts, with the prompt written as its caption. While the image generates, the dark frame shimmers. When the image is ready, it develops slowly from dark and grey into full colour.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Written on the print as its caption.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import InstantPhoto from "@/components/ui/instant-photo";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <InstantPhoto prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "Tile Reveal",
+    href: "/components/tilereveal",
+    category: "ai",
+    registry: "tile-reveal",
+    isNew: true,
+    description: "An AI image placeholder made of tiles that flip over to show the picture.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "While the image generates, a soft shimmer runs across the tiles. When the image is ready, the tiles flip over in a diagonal wave, each showing its piece of the picture.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Used as the accessible label while generating.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "columns",
+        type: "number",
+        default: "8",
+        description: "How many tiles across.",
+      },
+      {
+        name: "rows",
+        type: "number",
+        default: "columns",
+        description: "How many tiles down. Match it to the image's shape.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import TileReveal from "@/components/ui/tile-reveal";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <TileReveal prompt={prompt} src={url} />;
+}`,
+  },
+  {
     name: "Notification Menu",
     href: "/components/notificationmenu",
     category: "feedback",

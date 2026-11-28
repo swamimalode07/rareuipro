@@ -6,8 +6,11 @@ import AttachmentTray from "@/components/pro/attachment-tray";
 import ChipWheel from "@/components/pro/chip-wheel";
 import { Phone } from "@/components/pro/device-mockups";
 import Folder from "@/components/pro/folder";
+import ImageGeneration from "@/components/pro/image-generation";
+import InstantPhoto from "@/components/pro/instant-photo";
 import NotificationMenu from "@/components/pro/notification-menu";
 import Receipt from "@/components/pro/receipt";
+import TileReveal from "@/components/pro/tile-reveal";
 import VoiceOrb from "@/components/pro/voice-orb";
 
 function VoiceOrbPreview() {
@@ -37,8 +40,36 @@ const PREVIEWS: Record<string, React.ReactNode> = {
   "attachment-tray": (
     <div className="flex size-full items-center justify-center bg-white px-6 dark:bg-[#1A1A1A]">
       <AttachmentTray>
-        <p className="px-5 pb-1 pt-4 text-[15px] text-neutral-400">Ask anything, or drop a file here</p>
+        <p className="px-5 pb-1 pt-4 text-[15px] text-neutral-400">
+          Ask anything, or drop a file here
+        </p>
       </AttachmentTray>
+    </div>
+  ),
+  "image-generation": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <ImageGeneration
+        className="w-44"
+        prompt="Soft clouds drifting across an orange sky"
+      />
+    </div>
+  ),
+  "instant-photo": (
+    <div className="flex size-full items-start justify-center overflow-hidden bg-white pt-4 dark:bg-[#1A1A1A]">
+      <InstantPhoto
+        className="w-40"
+        prompt="Soft clouds drifting across an orange sky"
+        src="/assets/landing/herobg.webp"
+      />
+    </div>
+  ),
+  "tile-reveal": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <TileReveal
+        className="w-44"
+        columns={6}
+        prompt="Soft clouds drifting across an orange sky"
+      />
     </div>
   ),
   "voice-orb": (
@@ -74,9 +105,21 @@ const PREVIEWS: Record<string, React.ReactNode> = {
       <p className="flex items-center gap-[0.25em] font-runde text-2xl font-bold tracking-[-0.03em]">
         <ChipWheel
           items={[
-            { label: "Music", icon: <Music2 strokeWidth={2.5} />, color: "#1FAF5A" },
-            { label: "Sketch", icon: <PenTool strokeWidth={2.5} />, color: "#F07A2B" },
-            { label: "Mail", icon: <Mail strokeWidth={2.5} />, color: "#2F80ED" },
+            {
+              label: "Music",
+              icon: <Music2 strokeWidth={2.5} />,
+              color: "#1FAF5A",
+            },
+            {
+              label: "Sketch",
+              icon: <PenTool strokeWidth={2.5} />,
+              color: "#F07A2B",
+            },
+            {
+              label: "Mail",
+              icon: <Mail strokeWidth={2.5} />,
+              color: "#2F80ED",
+            },
           ]}
         />
         in one place
