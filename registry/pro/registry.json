@@ -20,24 +20,6 @@
       ]
     },
     {
-      "name": "light-beam-card",
-      "type": "registry:ui",
-      "title": "Light Beam Card",
-      "description": "A card lit by a warm beam of light that pours in from one corner.",
-      "dependencies": [
-        "motion"
-      ],
-      "registryDependencies": [
-        "utils"
-      ],
-      "files": [
-        {
-          "path": "components/pro/light-beam-card.tsx",
-          "type": "registry:ui"
-        }
-      ]
-    },
-    {
       "name": "folder",
       "type": "registry:ui",
       "title": "Folder",
@@ -53,6 +35,168 @@
           "path": "components/pro/folder.tsx",
           "type": "registry:ui"
         }
+      ]
+    },
+    {
+      "name": "chip-wheel",
+      "type": "registry:ui",
+      "title": "Chip Wheel",
+      "description": "A rolling wheel of pills that sits inside a line of text.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/chip-wheel.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "receipt",
+      "type": "registry:ui",
+      "title": "Receipt",
+      "description": "A paper receipt that prints out of a small printer, line by line.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/receipt.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "notification-menu",
+      "type": "registry:ui",
+      "title": "Notification Menu",
+      "description": "A bell with an unread count that opens a list of notifications.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/notification-menu.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "attachment-tray",
+      "type": "registry:ui",
+      "title": "Attachment Tray",
+      "description": "A prompt box that takes files, with thumbnails and upload progress.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/attachment-tray.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "voice-orb",
+      "type": "registry:ui",
+      "title": "Voice Orb",
+      "description": "A round voice button for talking to an assistant.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/voice-orb.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "image-generation",
+      "type": "registry:ui",
+      "title": "Image Generation",
+      "description": "A placeholder for an AI image that turns the prompt into the picture.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/image-generation.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "instant-photo",
+      "type": "registry:ui",
+      "title": "Instant Photo",
+      "description": "An AI image placeholder that ejects and develops like an instant photo.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/instant-photo.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "tile-reveal",
+      "type": "registry:ui",
+      "title": "Tile Reveal",
+      "description": "An AI image placeholder made of tiles that flip over to show the picture.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/tile-reveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "device-mockups",
+      "type": "registry:ui",
+      "title": "Device Mockups",
+      "description": "Phone, laptop, tablet and browser frames for showing off a design.",
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/device-mockups.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": [
+        "nucleo-ui-essential-outline-18"
       ]
     }
   ]

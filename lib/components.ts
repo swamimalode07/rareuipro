@@ -21,7 +21,8 @@ export type ComponentCategory =
   | "navigation"
   | "inputs"
   | "feedback"
-  | "display";
+  | "display"
+  | "mockups";
 
 export const CATEGORY_LABELS: Record<ComponentCategory, string> = {
   ai: "AI kit",
@@ -29,6 +30,7 @@ export const CATEGORY_LABELS: Record<ComponentCategory, string> = {
   inputs: "Inputs",
   feedback: "Feedback",
   display: "Display",
+  mockups: "Mockups",
 };
 
 export const CATEGORY_ORDER: ComponentCategory[] = [
@@ -37,6 +39,7 @@ export const CATEGORY_ORDER: ComponentCategory[] = [
   "navigation",
   "inputs",
   "feedback",
+  "mockups",
 ];
 
 export type ComponentItem = {
@@ -76,52 +79,679 @@ export const PANEL_INFO = {
 
 export const components: ComponentItem[] = [
   {
-    name: "Light Beam Card",
-    href: "/components/lightbeamcard",
-    category: "display",
-    registry: "light-beam-card",
+    name: "Phone",
+    href: "/components/phone",
+    category: "mockups",
+    registry: "device-mockups",
     isNew: true,
-    featured: true,
-    description:
-      "A card lit by a warm beam of light that pours in from one corner.",
-    dependencies: [{ name: "motion" }],
+    description: "A phone frame with a metal edge, an island and a status bar.",
+    dependencies: [],
     interaction:
-      "A soft beam of light rises from the bottom corner, cut by fine strands. Move the pointer across the card and the beam sways to follow it, then settles back when the pointer leaves.",
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
     props: [
       {
-        name: "color",
-        type: "string",
-        default: '"#FC4C01"',
-        control: "swatch",
-        options: ["#FC4C01", "#3B82F6", "#22C55E", "#A855F7"],
-        optionColors: {
-          "#FC4C01": "#FC4C01",
-          "#3B82F6": "#3B82F6",
-          "#22C55E": "#22C55E",
-          "#A855F7": "#A855F7",
-        },
-        description: "The colour of the beam. Any CSS colour works.",
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
       },
       {
-        name: "strands",
+        name: "finish",
+        type: '"silver" | "graphite" | "sand"',
+        default: '"silver"',
+        description: "The metal of the frame.",
+      },
+      {
+        name: "statusBar",
         type: "boolean",
-        default: "true",
-        description: "Draws the fine hairlines that run along the beam.",
+        default: "false",
+        description: "Shows the time, signal and battery at the top.",
       },
       {
-        name: "intensity",
-        type: "number",
-        default: "1",
-        description: "How strong the light is, from 0 to 1.",
+        name: "statusBarTone",
+        type: '"dark" | "light"',
+        default: '"dark"',
+        description: "Dark text for light screens, light text for dark ones.",
+      },
+      {
+        name: "time",
+        type: "string",
+        default: '"9:41"',
+        description: "The time in the status bar.",
       },
     ],
-    usage: `import LightBeamCard from "@/components/ui/light-beam-card";
+    usage: `import { Phone } from "@/components/ui/device-mockups";
 
-export default function Pricing() {
+export default function Showcase() {
   return (
-    <LightBeamCard className="max-w-sm">
-      <p className="text-6xl font-bold">$199</p>
-    </LightBeamCard>
+    <Phone className="w-[280px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </Phone>
+  );
+}`,
+  },
+  {
+    name: "Laptop",
+    href: "/components/laptop",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A laptop frame with a thin bezel, a camera notch and an aluminium base.",
+    dependencies: [],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "notch",
+        type: "boolean",
+        default: "true",
+        description: "Shows the camera notch at the top of the screen.",
+      },
+    ],
+    usage: `import { Laptop } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <Laptop className="w-[640px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </Laptop>
+  );
+}`,
+  },
+  {
+    name: "Tablet",
+    href: "/components/tablet",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A tablet frame with even bezels, in landscape or portrait.",
+    dependencies: [],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "finish",
+        type: '"silver" | "graphite" | "sand"',
+        default: '"silver"',
+        description: "The metal of the frame.",
+      },
+      {
+        name: "orientation",
+        type: '"landscape" | "portrait"',
+        default: '"landscape"',
+        description: "Which way the tablet is turned.",
+      },
+    ],
+    usage: `import { Tablet } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <Tablet orientation="portrait" className="w-[380px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </Tablet>
+  );
+}`,
+  },
+  {
+    name: "Browser Window",
+    href: "/components/browserwindow",
+    category: "mockups",
+    registry: "device-mockups",
+    isNew: true,
+    description: "A browser window with a toolbar and address bar, for web designs.",
+    dependencies: [{ name: "nucleo-ui-essential-outline-18" }],
+    interaction:
+      "Put any content inside and it fills the screen, live and clickable. The frame is drawn in SVG, so it stays sharp at any size.",
+    props: [
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "What shows on the screen. It fills the screen and is clipped to its corners.",
+      },
+      {
+        name: "url",
+        type: "string",
+        default: '"rareui.com"',
+        description: "The address shown in the toolbar.",
+      },
+      {
+        name: "tone",
+        type: '"auto" | "light" | "dark"',
+        default: '"auto"',
+        description: "A light or dark window. Auto follows the page's dark mode.",
+      },
+    ],
+    usage: `import { BrowserWindow } from "@/components/ui/device-mockups";
+
+export default function Showcase() {
+  return (
+    <BrowserWindow url="acme.com" className="w-[720px]">
+      <img src="/screen.png" alt="" className="size-full object-cover" />
+    </BrowserWindow>
+  );
+}`,
+  },
+  {
+    name: "Attachment Tray",
+    href: "/components/attachmenttray",
+    category: "ai",
+    registry: "attachment-tray",
+    isNew: true,
+    featured: true,
+    description: "A prompt box that takes files, with thumbnails and upload progress.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Drop files anywhere on the box, paste them, or click the paperclip. Images sharpen into focus as they upload, and other files fill up as a soft bar. Remove one and the rest slide over; press Backspace in an empty input to remove the last. Duplicates are skipped, and files that are too big, empty or the wrong type say why. A failed upload can be retried.",
+    props: [
+      {
+        name: "onUpload",
+        type: "(file: File, report: (progress: number) => void, signal: AbortSignal) => Promise<void>",
+        description: "Uploads one file. Call report with a number from 0 to 1 to move its progress, and reject to mark it failed. The signal aborts if the file is removed mid-upload.",
+      },
+      {
+        name: "onFilesChange",
+        type: "(files: File[]) => void",
+        description: "Called with the current files whenever one is added or removed.",
+      },
+      {
+        name: "accept",
+        type: "string",
+        description: "The file types the picker allows, like image/*,.pdf.",
+      },
+      {
+        name: "maxFiles",
+        type: "number",
+        default: "10",
+        description: "How many files can be attached. Extra ones show as an error.",
+      },
+      {
+        name: "maxSize",
+        type: "number",
+        default: "20971520",
+        description: "The largest file allowed, in bytes. The default is 20 MB.",
+      },
+      {
+        name: "actions",
+        type: "ReactNode",
+        description: "Shown on the right of the bottom row, like a send button.",
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: "false",
+        description: "Stops files from being added.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "The input that sits under the files, usually a textarea.",
+      },
+    ],
+    usage: `import AttachmentTray from "@/components/ui/attachment-tray";
+
+export default function Composer() {
+  return (
+    <AttachmentTray
+      onUpload={async (file, report, signal) => {
+        // upload the file with fetch(url, { signal }), calling report(0.5) and so on as it goes
+        report(1);
+      }}
+      actions={<button>Send</button>}
+    >
+      <textarea placeholder="Ask anything" className="w-full resize-none bg-transparent px-5 pt-4 outline-none" />
+    </AttachmentTray>
+  );
+}`,
+  },
+  {
+    name: "Voice Orb",
+    href: "/components/voiceorb",
+    category: "ai",
+    registry: "voice-orb",
+    isNew: true,
+    description: "A round voice button for talking to an assistant.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Tap the orb to start talking. Bands of light drift slowly around it at rest. While you speak, the edge brightens and the bands ripple with your voice. When the assistant replies, light grows from the centre with its voice and the orb turns the other way. Tap during the reply to cut in.",
+    props: [
+      {
+        name: "state",
+        type: '"idle" | "listening" | "speaking"',
+        default: '"idle"',
+        description: "What the orb is doing: resting, listening to you, or speaking a reply.",
+      },
+      {
+        name: "colors",
+        type: "[string, string, string]",
+        default: '["#F59BFF", "#B05CFF", "#7F8CFF"]',
+        description: "Three hex colours the light blends between around the orb.",
+      },
+      {
+        name: "level",
+        type: "number",
+        default: "0",
+        description: "How loud the current voice is, from 0 to 1. Pass the mic level while listening and the reply level while speaking.",
+      },
+      {
+        name: "onStart",
+        type: "() => void",
+        description: "Called when the orb is tapped while idle.",
+      },
+      {
+        name: "onStop",
+        type: "() => void",
+        description: "Called when the orb is tapped while listening.",
+      },
+      {
+        name: "onInterrupt",
+        type: "() => void",
+        description: "Called when the orb is tapped while speaking.",
+      },
+    ],
+    usage: `import { useState } from "react";
+import VoiceOrb, { useMicLevel } from "@/components/ui/voice-orb";
+
+export default function Assistant() {
+  const [state, setState] = useState<"idle" | "listening" | "speaking">("idle");
+  // returns 0 to 1 from the microphone while listening
+  const mic = useMicLevel(state === "listening");
+
+  return (
+    <VoiceOrb
+      state={state}
+      level={mic}
+      onStart={() => setState("listening")}
+      onStop={() => setState("speaking")}
+      onInterrupt={() => setState("listening")}
+    />
+  );
+}`,
+  },
+  {
+    name: "Image Generation",
+    href: "/components/imagegeneration",
+    category: "ai",
+    registry: "image-generation",
+    isNew: true,
+    description: "A placeholder for an AI image that turns the prompt into the picture.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "The prompt fades in, then each word breaks into fine dust that drifts while the image generates. When the image is ready, the dust flies into place, takes on its colours, and the picture sharpens in underneath.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "The text shown first and turned into dust.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. The dust keeps drifting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import ImageGeneration from "@/components/ui/image-generation";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <ImageGeneration prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "Instant Photo",
+    href: "/components/instantphoto",
+    category: "ai",
+    registry: "instant-photo",
+    isNew: true,
+    description: "An AI image placeholder that ejects and develops like an instant photo.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "A blank print slides out of the slot in short bursts, with the prompt written as its caption. While the image generates, the dark frame shimmers. When the image is ready, it develops slowly from dark and grey into full colour.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Written on the print as its caption.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import InstantPhoto from "@/components/ui/instant-photo";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <InstantPhoto prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "Tile Reveal",
+    href: "/components/tilereveal",
+    category: "ai",
+    registry: "tile-reveal",
+    isNew: true,
+    description: "An AI image placeholder made of tiles that flip over to show the picture.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "While the image generates, a soft shimmer runs across the tiles. When the image is ready, the tiles flip over in a diagonal wave, each showing its piece of the picture.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Used as the accessible label while generating.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "columns",
+        type: "number",
+        default: "8",
+        description: "How many tiles across.",
+      },
+      {
+        name: "rows",
+        type: "number",
+        default: "columns",
+        description: "How many tiles down. Match it to the image's shape.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import TileReveal from "@/components/ui/tile-reveal";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <TileReveal prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "Notification Menu",
+    href: "/components/notificationmenu",
+    category: "feedback",
+    registry: "notification-menu",
+    isNew: true,
+    featured: true,
+    description: "A bell with an unread count that opens a list of notifications.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "The badge shows how many notifications are unread, and the bell swings when a new one arrives. Click the bell and the list grows out of it. Click a notification to mark it read, or mark them all at once, and the count rolls down. Click outside or press Escape and it folds back into the bell.",
+    props: [
+      {
+        name: "notifications",
+        type: "{ id: string; title: string; body?: string; time: string; read?: boolean; avatar?: ReactNode }[]",
+        required: true,
+        description: "The list to show. Add a new item and the bell swings. Without an avatar, the initials of the title are used.",
+      },
+      {
+        name: "heading",
+        type: "string",
+        default: '"Notifications"',
+        description: "The title at the top of the list.",
+      },
+      {
+        name: "emptyText",
+        type: "string",
+        default: '"You\'re all caught up."',
+        description: "Shown when there are no notifications.",
+      },
+      {
+        name: "align",
+        type: '"start" | "center" | "end"',
+        default: '"center"',
+        description: "Where the list sits under the bell. Centered by default.",
+      },
+      {
+        name: "onRead",
+        type: "(id: string) => void",
+        description: "Called when a notification is marked read.",
+      },
+      {
+        name: "onReadAll",
+        type: "() => void",
+        description: "Called when every notification is marked read.",
+      },
+    ],
+    usage: `import NotificationMenu from "@/components/ui/notification-menu";
+
+export default function Header() {
+  return (
+    <NotificationMenu
+      notifications={[
+        { id: "1", title: "Maya Chen", body: "Left a comment on Pricing.", time: "2m" },
+        { id: "2", title: "Deploy finished", body: "main is live.", time: "18m", read: true },
+      ]}
+      onRead={(id) => console.log("read", id)}
+    />
+  );
+}`,
+  },
+  {
+    name: "Receipt",
+    href: "/components/receipt",
+    category: "display",
+    registry: "receipt",
+    isNew: true,
+    featured: true,
+    description: "A paper receipt that prints out of a small printer, line by line.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "When the receipt scrolls into view it feeds out of the slot in short pulses, like a real thermal printer, while the light on the printer glows. Press the button on the printer to print it again.",
+    props: [
+      {
+        name: "items",
+        type: "{ label: string; price: number; qty?: number; note?: string }[]",
+        required: true,
+        description: "The lines on the receipt. Subtotal, tax and total are worked out from these.",
+      },
+      {
+        name: "merchant",
+        type: "{ name: string; address?: string; logo?: ReactNode }",
+        description: "The header at the top of the paper.",
+      },
+      {
+        name: "title",
+        type: "string",
+        default: '"Payment successful"',
+        description: "The small heading above the total.",
+      },
+      {
+        name: "meta",
+        type: "string[]",
+        description: "Short lines under the total, like the date and card.",
+      },
+      {
+        name: "adjustments",
+        type: "{ label: string; amount: number }[]",
+        description: "Extra lines added before tax, like a discount (negative) or a tip.",
+      },
+      {
+        name: "tax",
+        type: "{ label?: string; rate: number }",
+        description: "The tax line. A rate of 0.05 is 5%. Leave it out for no tax.",
+      },
+      {
+        name: "currency",
+        type: "string",
+        default: '"USD"',
+        description: "The ISO currency code used to format every amount.",
+      },
+      {
+        name: "locale",
+        type: "string",
+        default: '"en-US"',
+        description: "The locale used to format amounts.",
+      },
+      {
+        name: "formatAmount",
+        type: "(value: number) => string",
+        description: "Your own amount formatter. Overrides currency and locale.",
+      },
+      {
+        name: "stamp",
+        type: "string",
+        default: '"Paid"',
+        description: "The word in the round stamp. Pass an empty string to hide it.",
+      },
+      {
+        name: "footer",
+        type: "string",
+        default: '"Thank you"',
+        description: "The note at the bottom of the paper.",
+      },
+      {
+        name: "barcode",
+        type: "string",
+        description: "Draws a barcode with this value under the footer.",
+      },
+      {
+        name: "paperColor",
+        type: "string",
+        default: '"#FAF9F6"',
+        description: "The colour of the paper.",
+      },
+      {
+        name: "inkColor",
+        type: "string",
+        default: '"#262522"',
+        description: "The colour of the printed text.",
+      },
+      {
+        name: "duration",
+        type: "number",
+        default: "2.4",
+        description: "How long the print takes, in seconds.",
+      },
+      {
+        name: "printer",
+        type: "boolean",
+        default: "true",
+        description: "Shows the printer. Without it the receipt renders as plain paper.",
+      },
+      {
+        name: "children",
+        type: "ReactNode",
+        description: "Extra content printed under the total.",
+      },
+    ],
+    usage: `import Receipt from "@/components/ui/receipt";
+
+export default function Checkout() {
+  return (
+    <Receipt
+      merchant={{ name: "Corner Café" }}
+      meta={["27 Nov 2026", "Card ···· 4242"]}
+      items={[
+        { label: "Flat white", price: 4.5, qty: 2 },
+        { label: "Banana bread", price: 3.25 },
+      ]}
+      tax={{ label: "VAT", rate: 0.05 }}
+      currency="GBP"
+      locale="en-GB"
+    />
+  );
+}`,
+  },
+  {
+    name: "Chip Wheel",
+    href: "/components/chipwheel",
+    category: "display",
+    registry: "chip-wheel",
+    isNew: true,
+    featured: true,
+    description: "A rolling wheel of pills that sits inside a line of text.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "Pills roll up one at a time like a picker wheel. The one in the middle faces you, and the ones above and below tip back and fade into the background. The text beside it stays still. Hover to pause.",
+    props: [
+      {
+        name: "items",
+        type: "{ label: string; icon?: ReactNode; color?: string }[]",
+        required: true,
+        description: "The pills to cycle through. The color tints the label and fills the icon circle.",
+      },
+      {
+        name: "interval",
+        type: "number",
+        default: "2200",
+        description: "Time each pill stays in the middle, in milliseconds.",
+      },
+      {
+        name: "paused",
+        type: "boolean",
+        default: "false",
+        description: "Stops the wheel on the current pill.",
+      },
+    ],
+    usage: `import ChipWheel from "@/components/ui/chip-wheel";
+import { Mail, Music2 } from "lucide-react";
+
+export default function Headline() {
+  return (
+    <h2 className="flex items-center gap-2 text-5xl font-bold">
+      <ChipWheel
+        items={[
+          { label: "Music", icon: <Music2 />, color: "#1FAF5A" },
+          { label: "Mail", icon: <Mail />, color: "#2F80ED" },
+        ]}
+      />
+      in one place
+    </h2>
   );
 }`,
   },

@@ -2,7 +2,7 @@ import JsonLd from "@/components/JsonLd";
 import { componentJsonLd, componentPageMetadata } from "@/lib/seo";
 import Demo from "./demo";
 
-const HREF = "/components/lightbeamcard";
+const HREF = "/components/chipwheel";
 
 export const metadata = componentPageMetadata(HREF);
 
