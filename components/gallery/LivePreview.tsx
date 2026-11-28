@@ -6,10 +6,13 @@ import AttachmentTray from "@/components/pro/attachment-tray";
 import ChipWheel from "@/components/pro/chip-wheel";
 import { Phone } from "@/components/pro/device-mockups";
 import Folder from "@/components/pro/folder";
+import HalftoneReveal from "@/components/pro/halftone-reveal";
 import ImageGeneration from "@/components/pro/image-generation";
 import InstantPhoto from "@/components/pro/instant-photo";
+import LedWall from "@/components/pro/led-wall";
 import NotificationMenu from "@/components/pro/notification-menu";
 import Receipt from "@/components/pro/receipt";
+import SlidingPuzzle from "@/components/pro/sliding-puzzle";
 import TileReveal from "@/components/pro/tile-reveal";
 import VoiceOrb from "@/components/pro/voice-orb";
 
@@ -68,6 +71,30 @@ const PREVIEWS: Record<string, React.ReactNode> = {
       <TileReveal
         className="w-44"
         columns={6}
+        prompt="Soft clouds drifting across an orange sky"
+      />
+    </div>
+  ),
+  "halftone-reveal": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <HalftoneReveal
+        className="w-44"
+        prompt="Soft clouds drifting across an orange sky"
+      />
+    </div>
+  ),
+  "led-wall": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <LedWall
+        className="w-44"
+        prompt="Soft clouds drifting across an orange sky"
+      />
+    </div>
+  ),
+  "sliding-puzzle": (
+    <div className="flex size-full items-center justify-center bg-white dark:bg-[#1A1A1A]">
+      <SlidingPuzzle
+        className="w-44"
         prompt="Soft clouds drifting across an orange sky"
       />
     </div>

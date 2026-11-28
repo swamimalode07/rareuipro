@@ -521,6 +521,144 @@ export default function Result({ prompt, url }: { prompt: string; url?: string }
 }`,
   },
   {
+    name: "Halftone Reveal",
+    href: "/components/halftonereveal",
+    category: "ai",
+    registry: "halftone-reveal",
+    isNew: true,
+    description: "An AI image placeholder that prints the picture as halftone dots.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "While the image generates, small dots ripple out from the centre like ink on paper. When the image is ready, the dots take on its colours and swell into a halftone print, then the photo shows through.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Used as the accessible label while generating.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import HalftoneReveal from "@/components/ui/halftone-reveal";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <HalftoneReveal prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "LED Wall",
+    href: "/components/ledwall",
+    category: "ai",
+    registry: "led-wall",
+    isNew: true,
+    description: "An AI image placeholder drawn as a wall of tiny lights.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "While the image generates, a soft scan ring sweeps outward across the dark lights. When the image is ready, the lights switch on from the centre in the picture's colours, then the photo takes over.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Used as the accessible label while generating.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import LEDWall from "@/components/ui/led-wall";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <LEDWall prompt={prompt} src={url} />;
+}`,
+  },
+  {
+    name: "Sliding Puzzle",
+    href: "/components/slidingpuzzle",
+    category: "ai",
+    registry: "sliding-puzzle",
+    isNew: true,
+    description: "An AI image placeholder that solves itself like a sliding puzzle.",
+    dependencies: [{ name: "motion" }],
+    interaction:
+      "While the image generates, plain tiles keep sliding into the empty slot, one move at a time. When the image is ready, each tile shows its piece and slides home, and the missing corner fills in last.",
+    props: [
+      {
+        name: "prompt",
+        type: "string",
+        description: "Used as the accessible label while generating.",
+      },
+      {
+        name: "src",
+        type: "string",
+        description: "The finished image. Leave it empty while generating; the reveal starts once it loads.",
+      },
+      {
+        name: "alt",
+        type: "string",
+        description: "Describes the finished image. Falls back to the prompt.",
+      },
+      {
+        name: "grid",
+        type: "number",
+        default: "4",
+        description: "Tiles per side, from 2 to 8.",
+      },
+      {
+        name: "onReveal",
+        type: "() => void",
+        description: "Called once the image is fully shown.",
+      },
+      {
+        name: "onImageError",
+        type: "() => void",
+        description: "Called if src fails to load. It keeps waiting, so you can retry with a new src.",
+      },
+    ],
+    usage: `import SlidingPuzzle from "@/components/ui/sliding-puzzle";
+
+export default function Result({ prompt, url }: { prompt: string; url?: string }) {
+  // pass url once your model returns it
+  return <SlidingPuzzle prompt={prompt} src={url} />;
+}`,
+  },
+  {
     name: "Notification Menu",
     href: "/components/notificationmenu",
     category: "feedback",

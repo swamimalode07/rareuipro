@@ -182,6 +182,60 @@
       ]
     },
     {
+      "name": "halftone-reveal",
+      "type": "registry:ui",
+      "title": "Halftone Reveal",
+      "description": "An AI image placeholder that prints the picture as halftone dots.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/halftone-reveal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "led-wall",
+      "type": "registry:ui",
+      "title": "LED Wall",
+      "description": "An AI image placeholder drawn as a wall of tiny lights.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/led-wall.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sliding-puzzle",
+      "type": "registry:ui",
+      "title": "Sliding Puzzle",
+      "description": "An AI image placeholder that solves itself like a sliding puzzle.",
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "utils"
+      ],
+      "files": [
+        {
+          "path": "components/pro/sliding-puzzle.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "device-mockups",
       "type": "registry:ui",
       "title": "Device Mockups",
